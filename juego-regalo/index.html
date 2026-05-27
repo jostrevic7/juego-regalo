@@ -242,23 +242,23 @@ p{
     top: -5px;
     font-size: 22px;
     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+    transition: transform 0.2s ease;
 }
 
 .gift-emoji {
     position: absolute;
     right: 8px;
     font-size: 18px;
-    animation: bounce 0.8s infinite alternate;
 }
 
-/* REGALO BRILLANTE AL FINAL */
+/* EL REGALO BRILLA SIEMPRE CON PASIÓN */
 .gift-glowing {
     animation: giftGlow 1.2s infinite alternate !important;
 }
 
 @keyframes giftGlow {
     from { transform: translateY(0px) scale(1); filter: drop-shadow(0 0 5px #fff); }
-    to { transform: translateY(-8px) scale(1.15); filter: drop-shadow(0 0 20px #fff) drop-shadow(0 0 35px var(--secondary)); }
+    to { transform: translateY(-6px) scale(1.18); filter: drop-shadow(0 0 15px #fff) drop-shadow(0 0 25px var(--secondary)); }
 }
 
 .mini-hearts{
@@ -282,6 +282,61 @@ p{
 }
 
 .mini-heart:hover{ transform: translateY(-5px) scale(1.08); }
+
+/* CONTENEDORES EXCLUSIVOS PARA EL RASCA Y GANA */
+.scratch-container {
+    position: relative;
+    width: 280px;
+    height: 200px;
+    margin: 25px auto;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    background: #fff;
+}
+
+.scratch-bg-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+    text-align: center;
+    background-size: cover;
+    background-position: center;
+    background-image: url('img/fondorasca.jpg'); /* Opcional: Cambia por una foto vuestra */
+}
+
+.scratch-bg-content::before {
+    content: "";
+    position: absolute;
+    top:0; left:0; width:100%; height:100%;
+    background: rgba(255, 255, 255, 0.82); /* Capa suave encima de la foto para leer bien */
+    z-index: 1;
+}
+
+.scratch-text-inner {
+    position: relative;
+    z-index: 2;
+    color: #4a2834;
+    font-weight: 700;
+    font-size: 15px;
+    line-height: 1.4;
+}
+
+.scratch-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><text y="18" font-size="16">🪙</text></svg>'), auto;
+    touch-action: none;
+    z-index: 3;
+}
 
 .music-player{ width:100%; margin: 25px 0; border-radius:16px; }
 
@@ -386,9 +441,9 @@ p{
     <div id="gameScreen" class="card hidden">
         <div class="progress-road">
             <div class="car-container" id="carContainer">
-                <span class="car-emoji">🚗</span>
+                <span class="car-emoji" id="carEmoji">🚗</span>
             </div>
-            <span class="gift-emoji" id="progressGift">🎁</span>
+            <span class="gift-emoji gift-glowing" id="progressGift">🎁</span>
         </div>
         <div class="lives" id="lives"></div>
         <div id="questionLevel" class="question-level"></div>
@@ -405,6 +460,21 @@ p{
             <button class="mini-heart" onclick="checkMiniGame(true, this)">🩷</button>
             <button class="mini-heart" onclick="checkMiniGame(false, this)">💖</button>
         </div>
+    </div>
+
+    <div id="scratchScreen" class="card hidden">
+        <h1>✨ Rasca y Gana ✨</h1>
+        <p>Usa tu dedo o moneda para rascar la tarjeta y descubrir la sorpresa...</p>
+        <div class="scratch-container">
+            <div class="scratch-bg-content">
+                <div class="scratch-text-inner">
+                    💖 ¡Bono de Amor Desbloqueado! 💖<br><br>
+                    Para continuar la aventura, dale un súper beso a tu novio y pulsa el botón 😉
+                </div>
+            </div>
+            <canvas id="scratchCanvas" width="280" height="200" class="scratch-canvas"></canvas>
+        </div>
+        <button id="scratchBtn" class="btn hidden" onclick="completeScratchCard()">¡Beso dado, Continuar!</button>
     </div>
 
     <div id="musicGameScreen" class="card hidden">
@@ -465,14 +535,14 @@ const QUESTIONS = [
 
 let currentQuestion = 0;
 let lives = 3;
+let streak = 0; 
 let audioCtx = null; 
 
 // CONFIGURACIÓN DEL SINTETIZADOR DE MÚSICA DE JUEGO RETRO
 let bgMusicInterval = null;
 let melodyIndex = 0;
-// Secuencia de frecuencias alegres y tranquilas en bucle (Do, Mi, Sol, La...)
 const MELODY_NOTES = [261.63, 329.63, 392.00, 440.00, 392.00, 329.63, 293.66, 349.23];
-const NOTE_TIME = 0.35; // Duración de cada nota en segundos
+const NOTE_TIME = 0.35; 
 
 const startScreen = document.getElementById("startScreen");
 const gameScreen = document.getElementById("gameScreen");
@@ -483,18 +553,24 @@ const answersContainer = document.getElementById("answersContainer");
 const livesContainer = document.getElementById("lives");
 const finalLivesContainer = document.getElementById("finalLives");
 const carContainer = document.getElementById("carContainer");
-const progressGift = document.getElementById("progressGift");
+const carEmoji = document.getElementById("carEmoji");
 const miniGameScreen = document.getElementById("miniGameScreen");
+const scratchScreen = document.getElementById("scratchScreen");
 const musicGameScreen = document.getElementById("musicGameScreen");
 const songPlayer = document.getElementById("songPlayer");
 const finalMemoryGameScreen = document.getElementById("finalMemoryGameScreen");
 const memoryGridContainer = document.getElementById("memoryGridContainer");
 
+// VARIABLES EXCLUSIVAS DEL RASCA Y GANA
+const scratchCanvas = document.getElementById("scratchCanvas");
+const scratchCtx = scratchCanvas.getContext("2d");
+let isScratching = false;
+
 gameScreen.classList.add("hidden");
 
 /* EFECTO INTERACTIVO DE PANTALLA */
 document.body.addEventListener('click', (e) => {
-    if(e.target.tagName === 'BUTTON' || e.target.tagName === 'AUDIO') return;
+    if(e.target.tagName === 'BUTTON' || e.target.tagName === 'AUDIO' || e.target.tagName === 'CANVAS') return;
     
     const heart = document.createElement('span');
     heart.className = 'click-heart';
@@ -508,7 +584,7 @@ document.body.addEventListener('click', (e) => {
 
 /* INICIA EL GENERADOR DE MÚSICA RETRO AMBIENTAL SIN ARCHIVOS EXTERNOS */
 function startProceduralMusic() {
-    if (bgMusicInterval) return; // Si ya está sonando, no duplicar
+    if (bgMusicInterval) return; 
     
     bgMusicInterval = setInterval(() => {
         if (!audioCtx || audioCtx.state === 'suspended') return;
@@ -517,11 +593,9 @@ function startProceduralMusic() {
             const osc = audioCtx.createOscillator();
             const gainNode = audioCtx.createGain();
             
-            // Onda de tipo triángulo: Suena muy dulce, idéntica a las melodías suaves de GameBoy
             osc.type = 'triangle';
             osc.frequency.setValueAtTime(MELODY_NOTES[melodyIndex], audioCtx.currentTime);
             
-            // Volumen ultra-bajo (0.015) para que actúe estrictamente como sonido de fondo de ambiente
             gainNode.gain.setValueAtTime(0.015, audioCtx.currentTime);
             gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + NOTE_TIME - 0.03);
             
@@ -544,7 +618,6 @@ function stopProceduralMusic() {
 }
 
 function startGame(){
-    // Activar motor de audio nativo del móvil inmediatamente bajo el clic de comenzar
     if (!audioCtx) {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     }
@@ -552,11 +625,11 @@ function startGame(){
         audioCtx.resume();
     }
 
-    // Arrancar el bucle musical artificial
     startProceduralMusic();
 
     currentQuestion = 0;
     lives = 3;
+    streak = 0; 
     startScreen.classList.add("hidden");
     gameScreen.classList.remove("hidden");
     renderLives();
@@ -577,23 +650,31 @@ function renderLives(){
     }
 }
 
-/* CARGA Y BARREJA DE FORMA ALEATORIA REAL LAS RESPUESTAS */
+/* CARGA Y MEZCLA DE RESPUESTAS CON CONTADOR SUB-DIVIDIDO */
 function loadQuestion(){
     if(currentQuestion >= QUESTIONS.length) return;
     const q = QUESTIONS[currentQuestion];
-    document.getElementById("questionLevel").textContent = "Nivel de pregunta: " + q.level;
+    
+    const totalInLevel = QUESTIONS.filter(item => item.level === q.level).length;
+    
+    let currentInLevel = 0;
+    for (let i = 0; i <= currentQuestion; i++) {
+        if (QUESTIONS[i].level === q.level) {
+            currentInLevel++;
+        }
+    }
+    
+    document.getElementById("questionLevel").textContent = `${q.level} (${currentInLevel}/${totalInLevel})`;
+    
     questionText.textContent = q.question;
     answersContainer.innerHTML = "";
 
-    // Mapeamos las respuestas para recordar internamente cuál es la correcta original
     const answersMapped = q.answers.map((answer, index) => {
         return { text: answer, isCorrect: index === q.correct };
     });
 
-    // Barajamos aleatoriamente el array de respuestas mapeado
     answersMapped.sort(() => Math.random() - 0.5);
 
-    // Creamos los botones con el orden completamente mezclado
     answersMapped.forEach((ans) => {
         const btn = document.createElement("button");
         btn.className = "answer-btn";
@@ -609,10 +690,12 @@ function updateProgress(){
     const percent = (currentQuestion / totalQuestions) * maxProgressWidth;
     carContainer.style.width = percent + "%";
 
-    if (percent > 70) {
-        progressGift.classList.add('gift-glowing');
+    if (streak >= 4) {
+        carEmoji.textContent = "🚀"; 
+    } else if (streak >= 2) {
+        carEmoji.textContent = "🏎️💨"; 
     } else {
-        progressGift.classList.remove('gift-glowing');
+        carEmoji.textContent = "🚗"; 
     }
 }
 
@@ -651,16 +734,23 @@ function checkAnswer(isCorrect, buttonElement){
     if(isCorrect){
         triggerAciertoEffect(buttonElement, gameScreen);
         currentQuestion++;
+        streak++; 
         updateProgress();
         
         setTimeout(() => {
+            // CONTROL DE HITOS REPARTIDOS DE FORMA COMPENSADA (3 HITOS TOTALES)
             if(currentQuestion === 3){
                 gameScreen.classList.add("hidden");
                 miniGameScreen.classList.remove("hidden");
                 return;
             }
-            if(currentQuestion === 7){
-                stopProceduralMusic(); // Pausamos la melodía de ambiente automática para escuchar la pista de música
+            if(currentQuestion === 6){ // AQUÍ ENTRA EL RASCA Y GANA
+                gameScreen.classList.add("hidden");
+                setupScratchCardScreen();
+                return;
+            }
+            if(currentQuestion === 9){
+                stopProceduralMusic(); 
                 gameScreen.classList.add("hidden");
                 setupMusicGameScreen();
                 return;
@@ -674,7 +764,9 @@ function checkAnswer(isCorrect, buttonElement){
         }, 500);
     }else{
         lives--;
+        streak = 0; 
         renderLives();
+        updateProgress(); 
         triggerShake(gameScreen);
         if(lives <= 0){
             setTimeout(() => { gameScreen.classList.add("hidden"); loseGame(); }, 500);
@@ -685,6 +777,7 @@ function checkAnswer(isCorrect, buttonElement){
 function checkMiniGame(correct, buttonElement){
     if(correct){
         triggerAciertoEffect(buttonElement, miniGameScreen);
+        streak++; 
         setTimeout(() => {
             miniGameScreen.classList.add("hidden");
             gameScreen.classList.remove("hidden");
@@ -692,12 +785,93 @@ function checkMiniGame(correct, buttonElement){
         }, 500);
     }else{
         lives--;
+        streak = 0; 
         renderLives();
         triggerShake(miniGameScreen);
         if(lives <= 0){
             setTimeout(() => { miniGameScreen.classList.add("hidden"); loseGame(); }, 500);
         }
     }
+}
+
+/* LÓGICA COMPLETA DEL RASCA Y GANA */
+function setupScratchCardScreen() {
+    scratchScreen.classList.remove("hidden");
+    document.getElementById("scratchBtn").classList.add("hidden");
+    scratchCanvas.style.opacity = 1;
+    scratchCanvas.style.pointerEvents = "auto";
+    
+    // Rellenamos el lienzo de gris plateado brillante
+    scratchCtx.globalCompositeOperation = 'source-over';
+    scratchCtx.fillStyle = '#bdc3c7';
+    scratchCtx.fillRect(0, 0, scratchCanvas.width, scratchCanvas.height);
+    
+    // Le añadimos un patrón de puntitos blancos simulando brillo
+    scratchCtx.fillStyle = 'rgba(255,255,255,0.4)';
+    for(let i=0; i<80; i++) {
+        let rx = Math.random() * scratchCanvas.width;
+        let ry = Math.random() * scratchCanvas.height;
+        scratchCtx.fillRect(rx, ry, 2, 2);
+    }
+    
+    // Texto guía sobre el raspable
+    scratchCtx.fillStyle = '#636e72';
+    scratchCtx.font = 'bold 16px Poppins';
+    scratchCtx.textAlign = 'center';
+    scratchCtx.fillText('¡RASCA AQUÍ! 💖', scratchCanvas.width / 2, scratchCanvas.height / 2 + 5);
+
+    // Eventos de ratón
+    scratchCanvas.onmousedown = (e) => { isScratching = true; scratch(e); };
+    scratchCanvas.onmousemove = (e) => { scratch(e); };
+    window.onmouseup = () => { if(isScratching) { isScratching = false; calculateScratchPercentage(); } };
+
+    // Eventos táctiles para móviles
+    scratchCanvas.addEventListener('touchstart', (e) => { isScratching = true; scratch(e.touches[0]); });
+    scratchCanvas.addEventListener('touchmove', (e) => { scratch(e.touches[0]); e.preventDefault(); }, { passive: false });
+    window.addEventListener('touchend', () => { if(isScratching) { isScratching = false; calculateScratchPercentage(); } });
+}
+
+function scratch(e) {
+    if (!isScratching) return;
+    const rect = scratchCanvas.getBoundingClientRect();
+    const x = (e.clientX - rect.left) * (scratchCanvas.width / rect.width);
+    const y = (e.clientY - rect.top) * (scratchCanvas.height / rect.height);
+
+    scratchCtx.globalCompositeOperation = 'destination-out';
+    scratchCtx.beginPath();
+    scratchCtx.arc(x, y, 22, 0, Math.PI * 2); // Radio del trazo para limpiar
+    scratchCtx.fill();
+}
+
+function calculateScratchPercentage() {
+    const imgData = scratchCtx.getImageData(0, 0, scratchCanvas.width, scratchCanvas.height);
+    const pixels = imgData.data;
+    let transparentCount = 0;
+    
+    // Muestreamos cada 40 píxeles para optimizar el rendimiento del navegador
+    for (let i = 3; i < pixels.length; i += 40) {
+        if (pixels[i] === 0) transparentCount++;
+    }
+    
+    const totalSamples = pixels.length / 40;
+    const percentScratched = (transparentCount / totalSamples) * 100;
+
+    // Si ha limpiado más de la mitad, revelamos del todo
+    if (percentScratched > 55) {
+        playSystemSound('correct');
+        scratchCanvas.style.transition = "opacity 0.4s ease";
+        scratchCanvas.style.opacity = 0;
+        scratchCanvas.style.pointerEvents = "none";
+        document.getElementById("scratchBtn").classList.remove("hidden");
+    }
+}
+
+function completeScratchCard() {
+    streak++; // Bonificación de racha por completar el rasca
+    updateProgress();
+    scratchScreen.classList.add("hidden");
+    gameScreen.classList.remove("hidden");
+    loadQuestion();
 }
 
 function setupMusicGameScreen() {
@@ -731,7 +905,8 @@ function checkMusicGame(correct, buttonElement){
     songPlayer.currentTime = 0;
     if(correct){
         triggerAciertoEffect(buttonElement, musicGameScreen);
-        startProceduralMusic(); // Reanudamos de forma instantánea la música ambiental sintetizada
+        streak++; 
+        startProceduralMusic(); 
         setTimeout(() => {
             musicGameScreen.classList.add("hidden");
             gameScreen.classList.remove("hidden");
@@ -739,6 +914,7 @@ function checkMusicGame(correct, buttonElement){
         }, 500);
     }else{
         lives--;
+        streak = 0; 
         renderLives();
         triggerShake(musicGameScreen);
         if(lives <= 0){
@@ -785,6 +961,7 @@ function checkFinalMemory(correct, buttonElement){
         setTimeout(() => { finalMemoryGameScreen.classList.add("hidden"); winGame(); }, 500);
     }else{
         lives--;
+        streak = 0; 
         renderLives();
         triggerShake(finalMemoryGameScreen);
         buttonElement.classList.add("memory-incorrect");
@@ -837,9 +1014,30 @@ function restartGame(){
     finalMemoryGameScreen.classList.add("hidden");
     gameScreen.classList.add("hidden");
     miniGameScreen.classList.add("hidden");
+    scratchScreen.classList.add("hidden");
     musicGameScreen.classList.add("hidden");
     startScreen.classList.remove("hidden");
 }
+let audioUnlocked = false;
+
+function unlockAudio() {
+    if (audioUnlocked) return;
+
+    audioUnlocked = true;
+
+    // Intentamos "desbloquear" el audio
+    songPlayer.play().then(() => {
+        songPlayer.pause();
+        songPlayer.currentTime = 0;
+    }).catch(() => {
+        // si falla, no pasa nada
+    });
+
+    console.log("🔊 Audio desbloqueado");
+}
+
+// Se activa en el primer toque del usuario
+document.addEventListener("click", unlockAudio, { once: true });
 
 </script>
 <div class="floating-hearts">
