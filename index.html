@@ -31,12 +31,12 @@ body{
     justify-content:center;
     align-items:center;
     background:
-    linear-gradient(
-        135deg,
-        #ff9eb5,
-        #ffc2d1,
-        #ffe0e9
-    );
+linear-gradient(
+    135deg,
+    #ff7ea3,
+    #ffb3c7,
+    #ffd8e4
+);
     position:relative;
 }
 
@@ -84,7 +84,7 @@ body::after{
 /* TARJETA */
 
 .card{
-    background:rgba(255,255,255,.2);
+    background:rgba(255,255,255,.35);
     backdrop-filter:blur(20px);
     border:1px solid rgba(255,255,255,.3);
     border-radius:32px;
@@ -181,8 +181,8 @@ p{
 
 .question-level{
     display:inline-block;
-    background:rgba(255,255,255,.25);
-    color:white;
+    background:rgba(255,255,255,.82);
+    color:#a63d67;
     padding:10px 18px;
     border-radius:999px;
     margin-bottom:18px;
@@ -195,6 +195,8 @@ p{
 
 .question{
     color:white;
+    text-shadow:
+        0 3px 10px rgba(0,0,0,.22);
     font-size:26px;
     font-weight:700;
     line-height:1.4;
@@ -211,8 +213,8 @@ p{
 
 .answer-btn{
     border:none;
-    background:rgba(255,255,255,.22);
-    color:white;
+    background:rgba(255,255,255,.88);
+    color:#5a3b46;
     padding:16px;
     border-radius:18px;
     font-size:15px;
@@ -220,6 +222,8 @@ p{
     cursor:pointer;
     transition:.25s;
     backdrop-filter:blur(10px);
+    border:2px solid rgba(255,255,255,.35);
+    box-shadow: 0 6px 18px rgba(0,0,0,.08);
 }
 
 .answer-btn:hover{
@@ -275,6 +279,54 @@ p{
     line-height:1.5;
 }
 
+.floating-hearts span{
+    position:absolute;
+    bottom:-50px;
+    font-size:30px;
+    animation:floatHeart 10s linear infinite;
+    opacity:.5;
+}
+
+.floating-hearts span:nth-child(1){
+    left:10%;
+    animation-duration:8s;
+}
+
+.floating-hearts span:nth-child(2){
+    left:30%;
+    animation-duration:11s;
+}
+
+.floating-hearts span:nth-child(3){
+    left:50%;
+    animation-duration:9s;
+}
+
+.floating-hearts span:nth-child(4){
+    left:70%;
+    animation-duration:12s;
+}
+
+.floating-hearts span:nth-child(5){
+    left:90%;
+    animation-duration:7s;
+}
+
+@keyframes floatHeart{
+    from{
+        transform:translateY(0);
+        opacity:0;
+    }
+
+    20%{
+        opacity:.5;
+    }
+
+    to{
+        transform:translateY(-120vh);
+        opacity:0;
+    }
+}
 /* OCULTAR */
 
 .hidden{
@@ -294,6 +346,8 @@ p{
         font-size:22px;
     }
 
+
+
 }
 
 </style>
@@ -305,11 +359,12 @@ p{
     <!-- INICIO -->
     <div id="startScreen" class="card">
 
-        <h1>❤️ Juego Especial ❤️</h1>
+        <h1>JUEGO DE PREGUNTAS</h1>
 
         <p>
-            Responde correctamente todas las preguntas
-            antes de quedarte sin vidas.
+            Responde todas las preguntas correctamente para ganar un premio especial.
+            <br>
+            Tienes 3 vidas, si las pierdes todas el juego finalizará y perderas el premio.
         </p>
 
         <button class="btn" onclick="startGame()">
@@ -340,11 +395,9 @@ p{
 
         <div class="result-icon">🎉</div>
 
-        <h1>¡Lo conseguiste!</h1>
+        <h1>OLEEEEE</h1>
 
-        <p>
-            Has completado todas las preguntas.
-        </p>
+
 
         <div class="gift" id="giftMessage"></div>
 
@@ -376,7 +429,7 @@ p{
 ==================================== */
 
 const GIFT_MESSAGE =
-"🎁 ¡Has conseguido tu regalo! Te lo entregaré en persona muy pronto ❤️";
+"🎁 Te quiero mucho amor, espero que te guste mucho, abre la guantera ❤️";
 
 /* ====================================
    PREGUNTAS
@@ -385,16 +438,28 @@ const GIFT_MESSAGE =
 const QUESTIONS = [
 
 {
-    level: "🟡 Media",
-    question:"¿Qué es lo que me gusta más de ti?",
+    level: "🟢 Fácil",
+    question:"¿Cuál fue mi jugador favorito de la infancia?",
     answers:[
-        "Tus cejas",
-        "Tus ojos",
-        "Tu sonrisa",
-        "Tu pelo"
+        "Cristiano Ronaldo",
+        "Lionel Messi",
+        "Gareth Bale",
+        "Oscar Cañellas"
     ],
-    correct:1
+    correct:2
 },
+
+{
+    level: "🟢 Fácil",
+    question:"¿Cual es el mejor Kebab de Novelda?",
+    answers:[
+        "Roma",
+        "Paris",
+        "Manila"
+        ],
+    correct:2
+},
+
 
 {
     level: "🟢 Fácil",
@@ -409,6 +474,80 @@ const QUESTIONS = [
 },
 
 {
+    level: "🟢 Fácil",
+    question:"¿Qué siento cuando estoy contigo?",
+    answers:[
+        "Paz",
+        "Felicidad",
+        "Confianza",
+        "Todas las anteriores ❤️"
+    ],
+    correct:3
+},
+
+
+{
+    level: "🟡 Media",
+    question:"¿Qué es lo que me gusta más de ti?",
+    answers:[
+        "Tus cejas",
+        "Tus ojos",
+        "Tu sonrisa",
+        "Tu pelo"
+    ],
+    correct:1
+},
+
+{
+    level: "🟡 Media",
+    question:"¿Qué es lo que más me cuesta?",
+    answers:[
+        "Madrugar",
+        "Esperar",
+        "Estudiar",
+        "Ahorrar dinero"
+    ],
+    correct:0
+},
+
+{
+    level: "🟡 Media",
+    question:"¿Qué plan elegiría siempre contigo?",
+    answers:[
+        "Salir de fiesta",
+        "Irnos lejos juntos",
+        "Quedarnos en casa",
+        "Dormir"
+    ],
+    correct:1
+},
+
+{
+    level: "🟡 Media",
+    question:"¿Qué es algo que siempre digo y odias?",
+    answers:[
+        "Te quiero",
+        "STOP",
+        "Vale",
+        "Que guapo soy"
+    ],
+    correct:2
+},
+
+{
+    level: "🟡 Media",
+    question:"¿Cuál es mi sueño o meta más grande?",
+    answers:[
+        "Ser jugador profesional",
+        "Formar una familia contigo",
+        "Sacarme el grado superior de jardineria",
+        "Ser famoso"
+    ],
+    correct:1
+},
+
+
+{
     level: "🔴 Difícil",
     question:"¿Qué comida me gusta más?",
     answers:[
@@ -421,28 +560,21 @@ const QUESTIONS = [
 },
 
 {
-    level: "🟢 Fácil",
-    question:"¿Qué siento cuando estoy contigo?",
+    level: "🔴 Difícil",
+    question:"¿Cancion favorita?",
     answers:[
-        "Paz",
-        "Felicidad",
-        "Confianza",
-        "Todas las anteriores ❤️"
+        "Kndel el Clandestino",
+        "Romii",
+        "Paño nuevo",
+        "Desenfocao"
     ],
     correct:3
 },
 
-{
-    level: "🟢 Fácil",
-    question:"¿Cuál fue mi jugador favorito de la infancia?",
-    answers:[
-        "Cristiano Ronaldo",
-        "Lionel Messi",
-        "Gareth Bale",
-        "Oscar Cañellas"
-    ],
-    correct:2
-}
+
+
+
+
 
 ];
 
