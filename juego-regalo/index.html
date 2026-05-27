@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Juego del Regalo ❤️</title>
+
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root{
+    --primary:#ff4f87;
+    --secondary:#ff85a2;
+    --dark:#2b2b2b;
+    --white:#ffffff;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Poppins',sans-serif;
+    min-height:100vh;
+    overflow-x:hidden; /* Evitar scroll horizontal */
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:
+linear-gradient(
+    135deg,
+    #ff7ea3,
+    #ffb3c7,
+    #ffd8e4
+);
+    position:relative;
+}
+
+/* FONDO ANIMADO */
+
+body::before,
+body::after{
+    content:"";
+    position:absolute;
+    width:500px;
+    height:500px;
+    border-radius:50%;
+    background:rgba(255,255,255,.2);
+    filter:blur(80px);
+    animation:floatBg 10s infinite alternate;
+}
+
+body::before{
+    top:-100px;
+    left:-100px;
+}
+
+body::after{
+    bottom:-100px;
+    right:-100px;
+    animation-delay:5s;
+}
+
+@keyframes floatBg{
+    from{
+        transform:translateY(0px);
+    }
+    to{
+        transform:translateY(40px);
+    }
+}
+
+.container{
+    width:100%;
+    max-width:430px;
+    padding:20px;
+    z-index:2;
+}
+
+/* TARJETA */
+
+.card{
+    background:rgba(255,255,255,.35);
+    backdrop-filter:blur(20px);
+    border:1px solid rgba(255,255,255,.3);
+    border-radius:32px;
+    padding:35px 25px;
+    text-align:center;
+    box-shadow:
+    0 10px 40px rgba(0,0,0,.12);
+    animation:fadeUp .6s ease;
+}
+
+@keyframes fadeUp{
+    from{
+        opacity:0;
+        transform:translateY(30px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+h1{
+    color:white;
+    font-size:32px;
+    margin-bottom:15px;
+    font-weight:700;
+}
+
+p{
+    color:white;
+    opacity:.9;
+    line-height:1.6;
+    font-size:15px;
+}
+
+/* BOTONES */
+
+.btn{
+    margin-top:25px;
+    border:none;
+    background:white;
+    color:var(--primary);
+    font-size:16px;
+    font-weight:600;
+    padding:15px 28px;
+    border-radius:18px;
+    cursor:pointer;
+    transition:.25s;
+    box-shadow:
+    0 8px 20px rgba(0,0,0,.1);
+}
+
+.btn:hover{
+    transform:translateY(-3px) scale(1.03);
+}
+
+.btn:active{
+    transform:scale(.97);
+}
+
+/* VIDAS */
+
+.lives{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    margin-bottom:18px;
+}
+
+.heart{
+    font-size:32px;
+    animation:pulse 1.5s infinite;
+}
+
+@keyframes pulse{
+    0%{
+        transform:scale(1);
+    }
+    50%{
+        transform:scale(1.15);
+    }
+    100%{
+        transform:scale(1);
+    }
+}
+
+.lost{
+    opacity:.25;
+    transform:scale(.8);
+    animation:none;
+}
+
+/* NIVEL */
+
+.question-level{
+    display:inline-block;
+    background:rgba(255,255,255,.82);
+    color:#a63d67;
+    padding:10px 18px;
+    border-radius:999px;
+    margin-bottom:18px;
+    font-size:14px;
+    font-weight:600;
+    backdrop-filter:blur(10px);
+}
+
+/* PREGUNTA */
+
+.question{
+    color:white;
+    text-shadow:
+        0 3px 10px rgba(0,0,0,.22);
+    font-size:26px;
+    font-weight:700;
+    line-height:1.4;
+    margin-bottom:25px;
+}
+
+/* RESPUESTAS */
+
+.answers{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+}
+
+.answer-btn{
+    border:none;
+    background:rgba(255,255,255,.88);
+    color:#5a3b46;
+    padding:16px;
+    border-radius:18px;
+    font-size:15px;
+    font-weight:500;
+    cursor:pointer;
+    transition:.25s;
+    backdrop-filter:blur(10px);
+    border:2px solid rgba(255,255,255,.35);
+    box-shadow: 0 6px 18px rgba(0,0,0,.08);
+}
+
+.answer-btn:hover{
+    transform:translateY(-2px);
+    background:rgba(255,255,255,.35);
+}
+
+.answer-btn:active{
+    transform:scale(.98);
+}
+
+/* BARRA */
+
+.progress{
+    width:100%;
+    height:12px;
+    border-radius:999px;
+    background:rgba(255,255,255,.2);
+    overflow:hidden;
+    margin-bottom:25px;
+}
+
+.progress-bar{
+    height:100%;
+    width:0%;
+    border-radius:999px;
+    background:white;
+    transition:.4s;
+}
+
+.mini-hearts{
+    display:flex;
+    justify-content:center;
+    gap:15px;
+    margin-top:30px;
+    flex-wrap:wrap;
+}
+
+.mini-heart{
+    width:80px;
+    height:80px;
+    border:none;
+    border-radius:24px;
+    font-size:36px;
+    cursor:pointer;
+    transition:.25s;
+    background:rgba(255,255,255,.85);
+    box-shadow:
+    0 10px 25px rgba(0,0,0,.12);
+}
+
+.mini-heart:hover{
+    transform:
+    translateY(-5px)
+    scale(1.08);
+}
+
+.correct-heart{
+    animation:pulseHeart 1s infinite;
+}
+
+@keyframes pulseHeart{
+
+    0%{
+        transform:scale(1);
+    }
+
+    50%{
+        transform:scale(1.08);
+    }
+
+    100%{
+        transform:scale(1);
+    }
+
+}
+
+.music-player{
+    width:100%;
+    margin:
+    25px 0;
+    border-radius:16px;
+}
+
+/* FINAL */
+
+.result-icon{
+    font-size:90px;
+    margin-bottom:15px;
+    animation:bounce 1s infinite alternate;
+}
+
+@keyframes bounce{
+    from{
+        transform:translateY(0px);
+    }
+    to{
+        transform:translateY(-10px);
+    }
+}
+
+.gift{
+    margin-top:20px;
+    color:white;
+    font-size:22px;
+    font-weight:700;
+    line-height:1.5;
+}
+
+.floating-hearts span{
+    position:absolute;
+    bottom:-50px;
+    font-size:30px;
+    animation:floatHeart 10s linear infinite;
+    opacity:.5;
+}
+
+.floating-hearts span:nth-child(1){
+    left:10%;
+    animation-duration:8s;
+}
+
+.floating-hearts span:nth-child(2){
+    left:30%;
+    animation-duration:11s;
+}
+
+.floating-hearts span:nth-child(3){
+    left:50%;
+    animation-duration:9s;
+}
+
+.floating-hearts span:nth-child(4){
+    left:70%;
+    animation-duration:12s;
+}
+
+.floating-hearts span:nth-child(5){
+    left:90%;
+    animation-duration:7s;
+}
+
+@keyframes floatHeart{
+    from{
+        transform:translateY(0);
+        opacity:0;
+    }
+
+    20%{
+        opacity:.5;
+    }
+
+    to{
+        transform:translateY(-120vh);
+        opacity:0;
+    }
+}
+
+/* --- CUADRÍCULA DE RECUERDOS (ESTILO MASONRY) --- */
+.memory-grid {
+    column-count: 3; /* 3 columnas en escritorio */
+    column-gap: 12px;
+    margin-top: 25px;
+    width: 100%;
+}
+
+@media(max-width:480px){
+    .memory-grid {
+        column-count: 2; /* 2 columnas en móvil */
+    }
+}
+
+.memory-btn {
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 12px;
+    border: none;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.5s ease, opacity 0.5s ease;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+.memory-btn:hover:not(.memory-incorrect) {
+    transform: scale(1.05) translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+}
+
+.memory-btn img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+}
+
+/* Estilo para cuando se falla la foto (NUEVO) */
+.memory-btn.memory-incorrect {
+    filter: grayscale(100%); /* Blanco y negro */
+    opacity: 0.5;            /* Más transparente */
+    cursor: not-allowed;     /* Cursor de prohibido */
+    pointer-events: none;    /* Deshabilitar clics */
+    box-shadow: none;        /* Quitar sombra */
+}
+
+/* OCULTAR */
+
+.hidden{
+    display:none;
+}
+
+/* MÓVIL (Generales) */
+
+@media(max-width:480px){
+
+    .card{
+        padding:30px 20px;
+        border-radius:28px;
+    }
+
+    .question{
+        font-size:22px;
+    }
+
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <div id="startScreen" class="card">
+
+        <h1>JUEGO DE PREGUNTAS</h1>
+
+        <p>
+            Responde todas las preguntas correctamente para ganar un premio especial.
+            <br>
+            Tienes 3 vidas, si las pierdes todas el juego finalizará y perderas el premio.
+        </p>
+
+        <button class="btn" onclick="startGame()">
+            Comenzar
+        </button>
+
+    </div>
+
+    <div id="gameScreen" class="card hidden">
+
+        <div class="progress">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <div class="lives" id="lives"></div>
+
+        <div id="questionLevel" class="question-level"></div>
+
+        <div class="question" id="questionText"></div>
+
+        <div class="answers" id="answersContainer"></div>
+
+    </div>
+
+    <div id="miniGameScreen" class="card hidden">
+
+        <h1>💖</h1>
+
+        <p>
+            Encuentra el corazón correcto para continuar
+        </p>
+
+        <div class="mini-hearts">
+
+            <button class="mini-heart" onclick="checkMiniGame(false)">
+                💕
+            </button>
+
+            <button class="mini-heart" onclick="checkMiniGame(false)">
+                💘
+            </button>
+
+            <button class="mini-heart" onclick="checkMiniGame(true)">
+                🩷 
+            </button>
+
+            <button class="mini-heart" onclick="checkMiniGame(false)">
+                💖
+            </button>
+
+        </div>
+
+    </div>
+
+    <div id="musicGameScreen" class="card hidden">
+
+        <h1>🎵 Adivina la canción 🎵</h1>
+
+        <p>
+            Escucha el audio y adivina cuál es 
+        </p>
+
+        <audio
+            id="songPlayer"
+            controls
+            class="music-player"
+        >
+            <source
+                src="audio/videoplayback.mp3"
+                type="audio/mpeg"
+            >
+        </audio>
+
+        <div class="answers">
+
+            <button class="answer-btn"
+            onclick="checkMusicGame(false)">
+                Mendiara - ROMII
+            </button>
+
+            <button class="answer-btn"
+            onclick="checkMusicGame(true)">
+                Disobey - ENVIDIA
+            </button>
+
+            <button class="answer-btn"
+            onclick="checkMusicGame(false)">
+                Kndel El Clandestino
+            </button>
+
+            <button class="answer-btn"
+            onclick="checkMusicGame(false)">
+                Diweiik - PAÑO NUEVO
+            </button>
+
+        </div>
+
+    </div>
+
+    <div id="finalMemoryGameScreen" class="card hidden">
+
+        <h1>📸 Última prueba</h1>
+
+        <div class="lives" id="finalLives"></div>
+
+        <p>Elige mi recuerdo favorito ❤️</p>
+
+        <p>Solo uno es el correcto...</p>
+
+        <div class="memory-grid">
+
+            <button class="memory-btn" onclick="checkFinalMemory(true, this)">
+                <img src="img/recuerdo1.jpg" alt="Recuerdo 1">
+            </button>
+
+            <button class="memory-btn" onclick="checkFinalMemory(false, this)">
+                <img src="img/recuerdo2.jpg" alt="Recuerdo 2">
+            </button>
+
+            <button class="memory-btn" onclick="checkFinalMemory(false, this)">
+                <img src="img/recuerdo3.jpg" alt="Recuerdo 3">
+            </button>
+
+            <button class="memory-btn" onclick="checkFinalMemory(false, this)">
+                <img src="img/recuerdo4.jpg" alt="Recuerdo 4">
+            </button>
+
+            <button class="memory-btn" onclick="checkFinalMemory(false, this)">
+                <img src="img/recuerdo5.jpg" alt="Recuerdo 5">
+            </button>
+
+            <button class="memory-btn" onclick="checkFinalMemory(false, this)">
+                <img src="img/recuerdo6.jpg" alt="Recuerdo 6">
+            </button>
+
+            <button class="memory-btn" onclick="checkFinalMemory(false, this)">
+                <img src="img/recuerdo7.jpg" alt="Recuerdo 7">
+            </button>
+
+        </div>
+
+    </div>
+
+    <div id="winScreen" class="card hidden">
+
+        <div class="result-icon">🎉</div>
+
+        <h1>OLEEEEE</h1>
+
+        <div class="gift" id="giftMessage"></div>
+
+    </div>
+
+    <div id="loseScreen" class="card hidden">
+
+        <div class="result-icon">💔</div>
+
+        <h1>Fin del juego</h1>
+
+        <p>
+            Te has quedado sin vidas.
+        </p>
+
+        <button class="btn" onclick="restartGame()">
+            Intentar de nuevo
+        </button>
+
+    </div>
+
+</div>
+
+<script>
+
+/* ====================================
+   MENSAJE FINAL DEL REGALO
+==================================== */
+
+const GIFT_MESSAGE =
+"🎁 Te quiero mucho amor. Espero que te guste mucho, abre la guantera del coche ❤️";
+
+/* ====================================
+   PREGUNTAS
+==================================== */
+
+const QUESTIONS = [
+
+{
+    level: "🟢 Fácil",
+    question:"¿Qué llevaba puesto el día que nos conocimos?",
+    answers:[
+        "Una sudadera",
+        "Una camisa",
+        "Un plátano",
+        "Un polo"
+    ],
+    correct:2
+},
+
+{
+    level: "🟢 Fácil",
+    question:"¿Cuál fue mi jugador favorito de la infancia?",
+    answers:[
+        "Cristiano Ronaldo",
+        "Lionel Messi",
+        "Gareth Bale",
+        "Oscar Cañellas"
+    ],
+    correct:2
+},
+
+{
+    level: "🟢 Fácil",
+    question:"¿Cual es el mejor Kebab de Novelda?",
+    answers:[
+        "Roma",
+        "Paris",
+        "Manila"
+    ],
+    correct:2
+},
+
+{
+    level: "🟢 Fácil",
+    question:"¿Qué siento cuando estoy contigo?",
+    answers:[
+        "Paz",
+        "Felicidad",
+        "Confianza",
+        "Todas las anteriores"
+    ],
+    correct:3
+},
+
+{
+    level: "🟡 Media",
+    question:"¿Qué es lo que me gusta más de ti?",
+    answers:[
+        "Tus cejas",
+        "Tus ojos",
+        "Tu sonrisa",
+        "Tu pelo"
+    ],
+    correct:1
+},
+
+{
+    level: "🟡 Media",
+    question:"¿Qué es lo que más me cuesta?",
+    answers:[
+        "Madrugar",
+        "Esperar",
+        "Estudiar",
+        "Ahorrar dinero"
+    ],
+    correct:0
+},
+
+{
+    level: "🟡 Media",
+    question:"¿Qué plan elegiría siempre contigo?",
+    answers:[
+        "Salir de fiesta",
+        "Irnos lejos juntos",
+        "Quedarnos en casa",
+        "Dormir"
+    ],
+    correct:1
+},
+
+{
+    level: "🟡 Media",
+    question:"¿Qué es algo que siempre digo y odias?",
+    answers:[
+        "Te quiero",
+        "STOP",
+        "Vale",
+        "Que guapo soy"
+    ],
+    correct:2
+},
+
+{
+    level: "🟡 Media",
+    question:"¿Cuál es mi sueño o meta más grande?",
+    answers:[
+        "Ser jugador profesional",
+        "Formar una familia contigo",
+        "Sacarme el grado superior de jardineria",
+        "Ser famoso"
+    ],
+    correct:1
+},
+
+{
+    level: "🔴 Difícil",
+    question:"¿Qué comida me gusta más?",
+    answers:[
+        "Kebab",
+        "Paella sin verdura",
+        "McFlurry",
+        "Macarrones"
+    ],
+    correct:1
+},
+
+{
+    level: "🔴 Difícil",
+    question:"¿Cancion favorita?",
+    answers:[
+        "Kndel el Clandestino",
+        "Romii",
+        "Paño nuevo",
+        "Desenfocao"
+    ],
+    correct:3
+},
+
+];
+
+/* ====================================
+   VARIABLES
+==================================== */
+
+let currentQuestion = 0;
+let lives = 3;
+
+/* ====================================
+   ELEMENTOS
+==================================== */
+
+const startScreen =
+document.getElementById("startScreen");
+
+const gameScreen =
+document.getElementById("gameScreen");
+
+const winScreen =
+document.getElementById("winScreen");
+
+const loseScreen =
+document.getElementById("loseScreen");
+
+const questionText =
+document.getElementById("questionText");
+
+const answersContainer =
+document.getElementById("answersContainer");
+
+const livesContainer =
+document.getElementById("lives");
+
+const finalLivesContainer = // Contenedor de vidas final
+document.getElementById("finalLives");
+
+const progressBar =
+document.getElementById("progressBar");
+
+const miniGameScreen =
+document.getElementById("miniGameScreen");
+
+const musicGameScreen =
+document.getElementById("musicGameScreen");
+
+const songPlayer = 
+document.getElementById("songPlayer");
+
+const finalMemoryGameScreen =
+document.getElementById("finalMemoryGameScreen");
+
+/* ====================================
+   INICIO
+==================================== */
+
+function startGame(){
+
+    currentQuestion = 0;
+    lives = 3;
+
+    startScreen.classList.add("hidden");
+    gameScreen.classList.remove("hidden");
+
+    // Limpiar posibles estados anteriores de blanco y negro
+    const memoryButtons = finalMemoryGameScreen.querySelectorAll('.memory-btn');
+    memoryButtons.forEach(btn => btn.classList.remove('memory-incorrect'));
+
+    renderLives();
+    loadQuestion();
+}
+
+/* ====================================
+   VIDAS
+==================================== */
+
+function renderLives(){
+
+    // Renderizar vidas en la pantalla de juego normal
+    livesContainer.innerHTML = "";
+    // Renderizar vidas en la pantalla final
+    finalLivesContainer.innerHTML = "";
+
+    for(let i=0;i<3;i++){
+
+        const heart =
+        document.createElement("span");
+
+        heart.innerHTML = "❤️";
+        heart.classList.add("heart");
+
+        if(i >= lives){
+            heart.classList.add("lost");
+        }
+
+        // Clonar el corazón para ponerlo en ambos sitios
+        livesContainer.appendChild(heart.cloneNode(true));
+        finalLivesContainer.appendChild(heart);
+    }
+}
+
+/* ====================================
+   CARGAR PREGUNTA
+==================================== */
+
+function loadQuestion(){
+
+    // Seguridad: si no quedan preguntas, no hacemos nada (esto evita el cuelgue)
+    if(currentQuestion >= QUESTIONS.length){
+        return;
+    }
+
+    const q =
+    QUESTIONS[currentQuestion];
+
+    document.getElementById("questionLevel").textContent =
+"Nivel de pregunta: " + q.level;
+
+    questionText.textContent =
+    q.question;
+
+    answersContainer.innerHTML = "";
+
+    q.answers.forEach((answer,index)=>{
+
+        const btn =
+        document.createElement("button");
+
+        btn.className =
+        "answer-btn";
+
+        btn.textContent =
+        answer;
+
+        btn.onclick = () =>
+        checkAnswer(index);
+
+        answersContainer.appendChild(btn);
+    });
+
+    updateProgress();
+}
+
+/* ====================================
+   PROGRESO
+==================================== */
+
+function updateProgress(){
+
+    const percent =
+    (currentQuestion /
+    QUESTIONS.length) * 100;
+
+    progressBar.style.width =
+    percent + "%";
+}
+
+/* ====================================
+   RESPUESTA (PREGUNTAS NORMALES)
+==================================== */
+
+function checkAnswer(selected){
+    
+    gameScreen.style.transform = "scale(.98)";
+    
+    setTimeout(()=>{
+    gameScreen.style.transform = "scale(1)";
+},150);
+
+    const q =
+    QUESTIONS[currentQuestion];
+
+    if(selected === q.correct){
+
+        currentQuestion++;
+
+/* MOSTRAR MINIJUEGO 1 */
+if(currentQuestion === 3){
+    gameScreen.classList.add("hidden");
+    miniGameScreen.classList.remove("hidden");
+    return;
+}
+
+/* MOSTRAR MINIJUEGO MÚSICA */
+if(currentQuestion === 7){
+   gameScreen.classList.add("hidden");
+musicGameScreen.classList.remove("hidden");
+songPlayer.currentTime = 0;
+    return;
+}
+
+/* MOSTRAR PRUEBA FINAL */
+if(currentQuestion >= QUESTIONS.length){
+    gameScreen.classList.add("hidden");
+    finalMemoryGameScreen.classList.remove("hidden");
+    renderLives(); // Asegurar que las vidas se ven en la pantalla final
+    return;
+}
+
+        loadQuestion();
+
+    }else{
+
+        lives--;
+        renderLives();
+
+        if(lives <= 0){
+            // Si perdemos las vidas en preguntas normales, hay que ocultar esa pantalla
+            gameScreen.classList.add("hidden");
+            loseGame();
+        }
+    }
+}
+
+/* ====================================
+   LÓGICA MINIJUEGO CORAZONES
+==================================== */
+function checkMiniGame(correct){
+
+    miniGameScreen.classList.add("hidden");
+
+    if(correct){
+        gameScreen.classList.remove("hidden");
+        loadQuestion();
+    }else{
+        lives--;
+        renderLives();
+
+        if(lives <= 0){
+            loseGame();
+        }else{
+            gameScreen.classList.remove("hidden");
+            loadQuestion();
+        }
+    }
+}
+
+/* ====================================
+   LÓGICA MINIJUEGO MÚSICA
+==================================== */
+function checkMusicGame(correct){
+
+    songPlayer.pause();
+    songPlayer.currentTime = 0;
+
+    musicGameScreen.classList.add("hidden");
+
+    if(correct){
+        gameScreen.classList.remove("hidden");
+        loadQuestion();
+    }else{
+        lives--;
+        renderLives();
+
+        if(lives <= 0){
+            loseGame();
+        }else{
+            gameScreen.classList.remove("hidden");
+            loadQuestion();
+        }
+    }
+}
+
+/* ====================================
+   LÓGICA PRUEBA FINAL (MODIFICADA)
+==================================== */
+function checkFinalMemory(correct, buttonElement){
+
+    if(correct){
+        // Si acierta, ganamos
+        finalMemoryGameScreen.classList.add("hidden");
+        winGame();
+    }else{
+        // Si falla, restamos vida
+        lives--;
+        renderLives(); // Actualizar corazones en pantalla
+
+        if(lives <= 0){
+            // Si ya no quedan vidas, derrota total
+            finalMemoryGameScreen.classList.add("hidden");
+            loseGame();
+        }else{
+            // --- ESTE ES EL CAMBIO PRINCIPAL ---
+            // NO volvemos a la pantalla de preguntas.
+            // Te quedas en la misma pantalla de imágenes.
+            // Volvemos en blanco y negro SÓLO la imagen que pulsaste.
+            buttonElement.classList.add("memory-incorrect");
+        }
+    }
+}
+
+/* ====================================
+   GANAR
+==================================== */
+
+function winGame(){
+    // Ocultar cualquier pantalla que pudiera estar visible
+    gameScreen.classList.add("hidden");
+    finalMemoryGameScreen.classList.add("hidden");
+    miniGameScreen.classList.add("hidden");
+    musicGameScreen.classList.add("hidden");
+
+    winScreen.classList.remove("hidden");
+
+    document.getElementById(
+        "giftMessage"
+    ).textContent =
+    GIFT_MESSAGE;
+}
+
+/* ====================================
+   PERDER
+==================================== */
+
+function loseGame(){
+    loseScreen.classList.remove("hidden");
+}
+
+/* ====================================
+   REINICIAR
+==================================== */
+
+function restartGame(){
+    // Ocultar derrota y volver a inicio
+    loseScreen.classList.add("hidden");
+    winScreen.classList.add("hidden");
+    finalMemoryGameScreen.classList.add("hidden");
+    gameScreen.classList.add("hidden");
+    miniGameScreen.classList.add("hidden");
+    musicGameScreen.classList.add("hidden");
+
+    startScreen.classList.remove("hidden");
+}
+
+</script>
+<div class="floating-hearts">
+    <span>❤️</span>
+    <span>💖</span>
+    <span>💕</span>
+    <span>❤️</span>
+    <span>💗</span>
+</div>
+</body>
+</html>
