@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Juego del Regalo ❤️</title>
+
+<style>
+
+:root{
+    --primary:#ff4f87;
+    --secondary:#ff7ca8;
+    --bg:#fff7fa;
+    --text:#333;
+    --success:#4CAF50;
+    --danger:#e53935;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:linear-gradient(180deg,#fff7fa,#ffe8f0);
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+}
+
+.container{
+    width:100%;
+    max-width:500px;
+}
+
+.card{
+    background:white;
+    border-radius:24px;
+    padding:30px;
+    box-shadow:0 15px 40px rgba(0,0,0,.08);
+    text-align:center;
+    animation:fadeIn .5s ease;
+}
+
+h1{
+    color:var(--primary);
+    margin-bottom:15px;
+}
+
+p{
+    color:var(--text);
+    line-height:1.5;
+}
+
+.hidden{
+    display:none;
+}
+
+.btn{
+    border:none;
+    background:var(--primary);
+    color:white;
+    padding:14px 24px;
+    border-radius:12px;
+    cursor:pointer;
+    font-size:16px;
+    margin-top:20px;
+    transition:.3s;
+}
+
+.btn:hover{
+    transform:translateY(-2px);
+    background:#ff2f73;
+}
+
+.lives{
+    display:flex;
+    justify-content:center;
+    gap:8px;
+    margin-bottom:20px;
+}
+
+.heart{
+    font-size:30px;
+    transition:.3s;
+}
+
+.lost{
+    opacity:.25;
+    transform:scale(.8);
+}
+
+.question{
+    font-size:22px;
+    font-weight:bold;
+    color:#444;
+    margin-bottom:20px;
+}
+
+.answers{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.answer-btn{
+    border:none;
+    background:#f8f8f8;
+    padding:14px;
+    border-radius:12px;
+    cursor:pointer;
+    font-size:16px;
+    transition:.25s;
+}
+
+.answer-btn:hover{
+    background:#ffe0eb;
+}
+
+.progress{
+    width:100%;
+    height:10px;
+    background:#eee;
+    border-radius:999px;
+    overflow:hidden;
+    margin-bottom:20px;
+}
+
+.progress-bar{
+    height:100%;
+    width:0%;
+    background:linear-gradient(
+        90deg,
+        var(--primary),
+        var(--secondary)
+    );
+    transition:.4s;
+}
+
+.result-icon{
+    font-size:80px;
+    margin-bottom:15px;
+}
+
+.gift{
+    font-size:22px;
+    color:var(--primary);
+    font-weight:bold;
+    margin-top:15px;
+}
+
+.question-level{
+    display:inline-block;
+    background:#ffe6ef;
+    color:#ff4f87;
+    font-weight:bold;
+    padding:8px 14px;
+    border-radius:999px;
+    margin-bottom:15px;
+    font-size:14px;
+}
+
+@keyframes fadeIn{
+    from{
+        opacity:0;
+        transform:translateY(20px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+@media(max-width:480px){
+
+    .card{
+        padding:24px;
+    }
+
+    .question{
+        font-size:20px;
+    }
+
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- INICIO -->
+    <div id="startScreen" class="card">
+
+        <h1>❤️ Juego Especial ❤️</h1>
+
+        <p>
+            Responde correctamente todas las preguntas
+            antes de quedarte sin vidas.
+        </p>
+
+        <button class="btn" onclick="startGame()">
+            Comenzar
+        </button>
+
+    </div>
+
+    <!-- JUEGO -->
+    <div id="gameScreen" class="card hidden">
+
+        <div class="progress">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <div class="lives" id="lives"></div>
+
+        <div id="questionLevel" class="question-level"></div>
+
+        <div class="question" id="questionText"></div>
+
+        <div class="answers" id="answersContainer"></div>
+
+    </div>
+
+    <!-- VICTORIA -->
+    <div id="winScreen" class="card hidden">
+
+        <div class="result-icon">🎉</div>
+
+        <h1>¡Lo conseguiste!</h1>
+
+        <p>
+            Has completado todas las preguntas.
+        </p>
+
+        <div class="gift" id="giftMessage"></div>
+
+    </div>
+
+    <!-- DERROTA -->
+    <div id="loseScreen" class="card hidden">
+
+        <div class="result-icon">💔</div>
+
+        <h1>Fin del juego</h1>
+
+        <p>
+            Te has quedado sin vidas.
+        </p>
+
+        <button class="btn" onclick="restartGame()">
+            Intentar de nuevo
+        </button>
+
+    </div>
+
+</div>
+
+<script>
+
+/* ====================================
+   MENSAJE FINAL DEL REGALO
+==================================== */
+
+const GIFT_MESSAGE =
+"🎁 ¡Has conseguido tu regalo! Te lo entregaré en persona muy pronto ❤️";
+
+/* ====================================
+   PREGUNTAS
+==================================== */
+
+const QUESTIONS = [
+
+{
+    level: "🟡 Media",
+    question:"¿Qué es lo que me gusta más de ti?",
+    answers:[
+        "Tus cejas",
+        "Tus ojos",
+        "Tu sonrisa",
+        "Tu pelo"
+    ],
+    correct:1
+},
+
+{
+    level: "🟢 Fácil",
+    question:"¿Qué llevaba puesto el día que nos conocimos?",
+    answers:[
+        "Una sudadera",
+        "Una camisa",
+        "Un plátano",
+        "Un polo"
+    ],
+    correct:2
+},
+
+{
+    level: "🔴 Difícil",
+    question:"¿Qué comida me gusta más?",
+    answers:[
+        "Kebab",
+        "Paella sin verdura",
+        "McFlurry",
+        "Macarrones"
+    ],
+    correct:1
+},
+
+{
+    level: "🟢 Fácil",
+    question:"¿Qué siento cuando estoy contigo?",
+    answers:[
+        "Paz",
+        "Felicidad",
+        "Confianza",
+        "Todas las anteriores ❤️"
+    ],
+    correct:3
+},
+
+{
+    level: "🟢 Fácil",
+    question:"¿Cuál fue mi jugador favorito de la infancia?",
+    answers:[
+        "Cristiano Ronaldo",
+        "Lionel Messi",
+        "Gareth Bale",
+        "Oscar Cañellas"
+    ],
+    correct:2
+}
+
+];
+
+/* ====================================
+   VARIABLES
+==================================== */
+
+let currentQuestion = 0;
+let lives = 3;
+
+/* ====================================
+   ELEMENTOS
+==================================== */
+
+const startScreen =
+document.getElementById("startScreen");
+
+const gameScreen =
+document.getElementById("gameScreen");
+
+const winScreen =
+document.getElementById("winScreen");
+
+const loseScreen =
+document.getElementById("loseScreen");
+
+const questionText =
+document.getElementById("questionText");
+
+const answersContainer =
+document.getElementById("answersContainer");
+
+const livesContainer =
+document.getElementById("lives");
+
+const progressBar =
+document.getElementById("progressBar");
+
+/* ====================================
+   INICIO
+==================================== */
+
+function startGame(){
+
+    currentQuestion = 0;
+    lives = 3;
+
+    startScreen.classList.add("hidden");
+    gameScreen.classList.remove("hidden");
+
+    renderLives();
+    loadQuestion();
+}
+
+/* ====================================
+   VIDAS
+==================================== */
+
+function renderLives(){
+
+    livesContainer.innerHTML = "";
+
+    for(let i=0;i<3;i++){
+
+        const heart =
+        document.createElement("span");
+
+        heart.innerHTML = "❤️";
+        heart.classList.add("heart");
+
+        if(i >= lives){
+            heart.classList.add("lost");
+        }
+
+        livesContainer.appendChild(heart);
+    }
+}
+
+/* ====================================
+   CARGAR PREGUNTA
+==================================== */
+
+function loadQuestion(){
+
+    const q =
+    QUESTIONS[currentQuestion];
+
+    document.getElementById("questionLevel").textContent =
+"Nivel de pregunta: " + q.level;
+
+    questionText.textContent =
+    q.question;
+
+    answersContainer.innerHTML = "";
+
+    q.answers.forEach((answer,index)=>{
+
+        const btn =
+        document.createElement("button");
+
+        btn.className =
+        "answer-btn";
+
+        btn.textContent =
+        answer;
+
+        btn.onclick = () =>
+        checkAnswer(index);
+
+        answersContainer.appendChild(btn);
+    });
+
+    updateProgress();
+}
+
+/* ====================================
+   PROGRESO
+==================================== */
+
+function updateProgress(){
+
+    const percent =
+    (currentQuestion /
+    QUESTIONS.length) * 100;
+
+    progressBar.style.width =
+    percent + "%";
+}
+
+/* ====================================
+   RESPUESTA
+==================================== */
+
+function checkAnswer(selected){
+
+    const q =
+    QUESTIONS[currentQuestion];
+
+    if(selected === q.correct){
+
+        currentQuestion++;
+
+        if(
+            currentQuestion >=
+            QUESTIONS.length
+        ){
+            winGame();
+            return;
+        }
+
+        loadQuestion();
+
+    }else{
+
+        lives--;
+
+        renderLives();
+
+        if(lives <= 0){
+            loseGame();
+        }
+    }
+}
+
+/* ====================================
+   GANAR
+==================================== */
+
+function winGame(){
+
+    gameScreen.classList.add("hidden");
+    winScreen.classList.remove("hidden");
+
+    document.getElementById(
+        "giftMessage"
+    ).textContent =
+    GIFT_MESSAGE;
+}
+
+/* ====================================
+   PERDER
+==================================== */
+
+function loseGame(){
+
+    gameScreen.classList.add("hidden");
+    loseScreen.classList.remove("hidden");
+}
+
+/* ====================================
+   REINICIAR
+==================================== */
+
+function restartGame(){
+
+    loseScreen.classList.add("hidden");
+    startScreen.classList.remove("hidden");
+}
+
+</script>
+
+</body>
+</html>
