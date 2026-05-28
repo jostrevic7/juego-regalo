@@ -438,6 +438,10 @@ p{
 </head>
 <body>
 
+<audio id="bgMusic" loop>
+    <source src="audio/nuestra-cancion.mp3" type="audio/mpeg">
+</audio>
+
 <div class="container">
 
     <div id="startScreen" class="card">
@@ -514,14 +518,18 @@ p{
 
     <div id="winScreen" class="card hidden">
         <div class="result-icon">💖</div>
-        
+        <h1>Lo conseguiste amor</h1>
         <p style="margin-top:15px; font-size:16px; line-height:1.8; color:white;">
-            MUY BIEN AMOR ❤️
+            Sabía que ibas a conseguirlo ❤️
             <br><br>
-            Gracias por estar conmigo,por hacerme feliz y por convertirte en la persona más importante de mi vida.
+            Gracias por estar conmigo,
+            por cuidarme,
+            por hacerme feliz
+            y por convertirte en la persona más importante de mi vida.
             <br><br>
             Quiero seguir viviendo muchísimos momentos contigo.
-            asi que aqui tienes solo una pequeña sorpresa para recordarte lo mucho que te amo 💕
+            Y esto es solo una pequeña sorpresa
+            para recordarte lo mucho que te quiero 💕
         </p>
         <img src="img/final.jpg" class="final-photo">
         <button class="btn unlock-btn" onclick="showRewardScreen()">
@@ -571,7 +579,7 @@ let maxLives = 1;
 let streak = 0; 
 let audioCtx = null; 
 
-let proceduralMusicStarted = false;
+let bgMusicInterval = null;
 let melodyIndex = 0;
 const MELODY_NOTES = [261.63, 329.63, 392.00, 440.00, 392.00, 329.63, 293.66, 349.23];
 const NOTE_TIME = 0.35; 
@@ -581,6 +589,7 @@ const gameScreen = document.getElementById("gameScreen");
 const winScreen = document.getElementById("winScreen");
 const loseScreen = document.getElementById("loseScreen");
 const rewardScreen = document.getElementById("rewardScreen");
+const bgMusic = document.getElementById("bgMusic");
 const questionText = document.getElementById("questionText");
 const answersContainer = document.getElementById("answersContainer");
 const livesContainer = document.getElementById("lives");
@@ -612,67 +621,38 @@ document.body.addEventListener('click', (e) => {
 });
 
 function startProceduralMusic() {
-
-    if (proceduralMusicStarted) return;
-
-    proceduralMusicStarted = true;
-
-    const playNote = () => {
-
-        if (!audioCtx) return;
-
-        const osc = audioCtx.createOscillator();
-        const gainNode = audioCtx.createGain();
-
-        osc.type = 'triangle';
-
-        osc.frequency.setValueAtTime(
-            MELODY_NOTES[melodyIndex],
-            audioCtx.currentTime
-        );
-
-        gainNode.gain.setValueAtTime(0.03, audioCtx.currentTime);
-
-        gainNode.gain.exponentialRampToValueAtTime(
-            0.001,
-            audioCtx.currentTime + NOTE_TIME
-        );
-
-        osc.connect(gainNode);
-        gainNode.connect(audioCtx.destination);
-
-        osc.start();
-        osc.stop(audioCtx.currentTime + NOTE_TIME);
-
-        melodyIndex = (melodyIndex + 1) % MELODY_NOTES.length;
-
-        setTimeout(playNote, NOTE_TIME * 1000);
-    };
-
-    playNote();
+    if (bgMusicInterval) return; 
+    bgMusicInterval = setInterval(() => {
+        if (!audioCtx || audioCtx.state === 'suspended') return;
+        try {
+            const osc = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(MELODY_NOTES[melodyIndex], audioCtx.currentTime);
+            gainNode.gain.setValueAtTime(0.015, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + NOTE_TIME - 0.03);
+            osc.connect(gainNode); gainNode.connect(audioCtx.destination);
+            osc.start(); osc.stop(audioCtx.currentTime + NOTE_TIME);
+            melodyIndex = (melodyIndex + 1) % MELODY_NOTES.length;
+        } catch(e) {}
+    }, NOTE_TIME * 1000);
 }
 
 function stopProceduralMusic() {
-    proceduralMusicStarted = false;
+    if (bgMusicInterval) { clearInterval(bgMusicInterval); bgMusicInterval = null; }
 }
-async function startGame(){
+
+function startGame(){
+    bgMusic.volume = 0.15;
+    bgMusic.play();
 
     if (!audioCtx) {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     }
 
-    // DESBLOQUEAR AUDIO EN MÓVILES
     if (audioCtx.state === 'suspended') {
-        await audioCtx.resume();
+        audioCtx.resume();
     }
-
-    // SONIDO SILENCIOSO PARA ACTIVAR IOS/ANDROID
-    const buffer = audioCtx.createBuffer(1, 1, 22050);
-    const source = audioCtx.createBufferSource();
-
-    source.buffer = buffer;
-    source.connect(audioCtx.destination);
-    source.start(0);
 
     startProceduralMusic();
 
@@ -1071,4 +1051,3 @@ function restartGame(){
 </div>
 </body>
 </html>
-
