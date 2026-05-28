@@ -571,7 +571,7 @@ let maxLives = 1;
 let streak = 0; 
 let audioCtx = null; 
 
-let bgMusicInterval = null;
+let proceduralMusicStarted = false;
 let melodyIndex = 0;
 const MELODY_NOTES = [261.63, 329.63, 392.00, 440.00, 392.00, 329.63, 293.66, 349.23];
 const NOTE_TIME = 0.35; 
@@ -613,76 +613,73 @@ document.body.addEventListener('click', (e) => {
 
 function startProceduralMusic() {
 
-    if (bgMusicInterval) return;
+    if (proceduralMusicStarted) return;
 
-    // REANUDAR AUDIO EN MÓVILES
-    if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-    }
+    proceduralMusicStarted = true;
 
-    bgMusicInterval = setInterval(() => {
+    const playNote = () => {
 
-        try {
+        if (!audioCtx) return;
 
-            const osc = audioCtx.createOscillator();
-            const gainNode = audioCtx.createGain();
+        const osc = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
 
-            osc.type = 'triangle';
+        osc.type = 'triangle';
 
-            osc.frequency.setValueAtTime(
-                MELODY_NOTES[melodyIndex],
-                audioCtx.currentTime
-            );
+        osc.frequency.setValueAtTime(
+            MELODY_NOTES[melodyIndex],
+            audioCtx.currentTime
+        );
 
-            // MÁS VOLUMEN EN MÓVIL
-            gainNode.gain.setValueAtTime(
-                0.035,
-                audioCtx.currentTime
-            );
+        gainNode.gain.setValueAtTime(0.03, audioCtx.currentTime);
 
-            gainNode.gain.exponentialRampToValueAtTime(
-                0.001,
-                audioCtx.currentTime + NOTE_TIME - 0.03
-            );
+        gainNode.gain.exponentialRampToValueAtTime(
+            0.001,
+            audioCtx.currentTime + NOTE_TIME
+        );
 
-            osc.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
+        osc.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
 
-            osc.start();
-            osc.stop(audioCtx.currentTime + NOTE_TIME);
+        osc.start();
+        osc.stop(audioCtx.currentTime + NOTE_TIME);
 
-            melodyIndex = (melodyIndex + 1) % MELODY_NOTES.length;
+        melodyIndex = (melodyIndex + 1) % MELODY_NOTES.length;
 
-        } catch(e) {}
+        setTimeout(playNote, NOTE_TIME * 1000);
+    };
 
-    }, NOTE_TIME * 1000);
+    playNote();
 }
 
 function stopProceduralMusic() {
-    if (bgMusicInterval) { clearInterval(bgMusicInterval); bgMusicInterval = null; }
+    proceduralMusicStarted = false;
 }
+async function startGame(){
 
-function startGame(){
-
-    // FORZAR ACTIVACIÓN DE AUDIO EN MÓVIL
     if (!audioCtx) {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     }
 
-    // iPhone / Android fix
+    // DESBLOQUEAR AUDIO EN MÓVILES
     if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
+        await audioCtx.resume();
     }
 
-    // REINICIO COMPLETO
+    // SONIDO SILENCIOSO PARA ACTIVAR IOS/ANDROID
+    const buffer = audioCtx.createBuffer(1, 1, 22050);
+    const source = audioCtx.createBufferSource();
+
+    source.buffer = buffer;
+    source.connect(audioCtx.destination);
+    source.start(0);
+
+    startProceduralMusic();
+
     currentQuestion = 0;
     lives = 1;
     maxLives = 1;
     streak = 0;
-
-    // INICIAR MÚSICA PROCEDURAL
-    stopProceduralMusic();
-    startProceduralMusic();
 
     startScreen.classList.add("hidden");
     gameScreen.classList.remove("hidden");
