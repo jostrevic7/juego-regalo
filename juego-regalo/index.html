@@ -6,12 +6,10 @@
 
 <title>Juego del Regalo ❤️</title>
 
-<!-- LIBRERÍA DE CONFETI EXTERNA -->
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <style>
-
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght=300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
 :root{
     --primary:#ff4f87;
@@ -34,13 +32,7 @@ body{
     display:flex;
     justify-content:center;
     align-items:center;
-    background:
-linear-gradient(
-    135deg,
-    #ff7ea3,
-    #ffb3c7,
-    #ffd8e4
-);
+    background: linear-gradient(135deg, #ff7ea3, #ffb3c7, #ffd8e4);
     position:relative;
 }
 
@@ -356,6 +348,27 @@ p{
     min-height: 80px;
 }
 
+/* NUEVOS ESTILOS RECOMPENSA FINAL */
+.final-photo{
+    width:100%;
+    margin-top:25px;
+    border-radius:24px;
+    box-shadow:0 10px 30px rgba(0,0,0,.25);
+}
+
+.unlock-btn{
+    margin-top:30px;
+    font-size:18px;
+    padding:18px 28px;
+    animation:pulseUnlock 1.5s infinite;
+}
+
+@keyframes pulseUnlock{
+    0%{ transform:scale(1); }
+    50%{ transform:scale(1.05); }
+    100%{ transform:scale(1); }
+}
+
 .floating-hearts span{
     position:absolute;
     bottom:-50px;
@@ -415,20 +428,18 @@ p{
     box-shadow: none;
 }
 
-.hidden{ display:none; }
+.hidden{ display:none !important; }
 
 @media(max-width:480px){
     .card{ padding:30px 20px; border-radius:28px; }
     .question{ font-size:22px; }
 }
-
 </style>
 </head>
 <body>
 
 <div class="container">
 
-    <!-- INICIO -->
     <div id="startScreen" class="card">
         <h1>JUEGO DE PREGUNTAS</h1>
         <p>
@@ -439,7 +450,6 @@ p{
         <button class="btn" onclick="startGame()">Comenzar</button>
     </div>
 
-    <!-- JUEGO (Preguntas Normales) -->
     <div id="gameScreen" class="card hidden">
         <div class="progress-road">
             <div class="car-container" id="carContainer">
@@ -453,7 +463,6 @@ p{
         <div class="answers" id="answersContainer"></div>
     </div>
 
-    <!-- MINIJUEGO 1: CORAZONES -->
     <div id="miniGameScreen" class="card hidden">
         <h1>💖</h1>
         <p>Encuentra el corazón correcto para continuar</p>
@@ -465,7 +474,6 @@ p{
         </div>
     </div>
 
-    <!-- MINIJUEGO 2: RASCA Y GANA (CON TU TEXTO PERSONALIZADO) -->
     <div id="scratchScreen" class="card hidden">
         <h1>✨ Tarjeta Rasca ✨</h1>
         <p>Rasca la superficie gris para descubrir lo que oculta...</p>
@@ -481,7 +489,6 @@ p{
         <button id="scratchBtn" class="btn hidden" onclick="completeScratchCard()">¡Beso dado, reclamar vida! ❤️</button>
     </div>
 
-    <!-- ADIVINA LA CANCIÓN -->
     <div id="musicGameScreen" class="card hidden">
         <h1>🎵 Adivina la canción 🎵</h1>
         <p>Escucha el audio y adivina cuál es</p>
@@ -496,7 +503,6 @@ p{
         </div>
     </div>
 
-    <!-- MINIJUEGO FINAL: RECUERDO FAVORITO -->
     <div id="finalMemoryGameScreen" class="card hidden">
         <h1>📸 Última prueba</h1>
         <div class="lives" id="finalLives"></div>
@@ -506,14 +512,33 @@ p{
         <div class="memory-grid" id="memoryGridContainer"></div>
     </div>
 
-    <!-- VICTORIA -->
     <div id="winScreen" class="card hidden">
-        <div class="result-icon">🎉</div>
-        <h1>OLEEEEE</h1>
-        <div class="gift" id="giftMessage"></div>
+        <div class="result-icon">💖</div>
+        
+        <p style="margin-top:15px; font-size:16px; line-height:1.8; color:white;">
+            MUY BIEN AMOR ❤️
+            <br><br>
+            Gracias por estar conmigo,por hacerme feliz y por convertirte en la persona más importante de mi vida.
+            <br><br>
+            Quiero seguir viviendo muchísimos momentos contigo.
+            asi que aqui tienes solo una pequeña sorpresa para recordarte lo mucho que te amo 💕
+        </p>
+        <img src="img/final.jpg" class="final-photo">
+        <button class="btn unlock-btn" onclick="showRewardScreen()">
+            🔓 DESBLOQUEAR RECOMPENSA
+        </button>
     </div>
 
-    <!-- DERROTA -->
+    <div id="rewardScreen" class="card hidden">
+        <div class="result-icon">🎁</div>
+        <h1>RECOMPENSA DESBLOQUEADA</h1>
+        <p style="margin-top:25px; font-size:28px; font-weight:700; color:white; line-height:1.5;">
+            ABRE LA GUANTERA
+            <br>
+            DEL COCHE ❤️
+        </p>
+    </div>
+
     <div id="loseScreen" class="card hidden">
         <div class="result-icon">💔</div>
         <h1>Fin del juego</h1>
@@ -524,8 +549,7 @@ p{
 </div>
 
 <script>
-
-const GIFT_MESSAGE = "🎁 Te quiero mucho amor. Espero que te guste mucho, abre la guantera del coche ❤️";
+const GIFT_MESSAGE = "";
 
 const QUESTIONS = [
     { level: "🟢 Fácil", question:"¿Qué llevaba puesto el día que nos conocimos?", answers:["Una sudadera","Una camisa","Un plátano","Un polo"], correct:2 },
@@ -542,8 +566,8 @@ const QUESTIONS = [
 ];
 
 let currentQuestion = 0;
-let lives = 1;     // Empezamos con 1 vida por defecto
-let maxLives = 1;  // Límite inicial de corazones mostrados
+let lives = 1;     
+let maxLives = 1;  
 let streak = 0; 
 let audioCtx = null; 
 
@@ -556,6 +580,7 @@ const startScreen = document.getElementById("startScreen");
 const gameScreen = document.getElementById("gameScreen");
 const winScreen = document.getElementById("winScreen");
 const loseScreen = document.getElementById("loseScreen");
+const rewardScreen = document.getElementById("rewardScreen");
 const questionText = document.getElementById("questionText");
 const answersContainer = document.getElementById("answersContainer");
 const livesContainer = document.getElementById("lives");
@@ -573,8 +598,6 @@ const scratchCanvas = document.getElementById("scratchCanvas");
 const scratchCtx = scratchCanvas.getContext("2d");
 let isScratching = false;
 
-gameScreen.classList.add("hidden");
-
 /* EFECTO INTERACTIVO CLICK */
 document.body.addEventListener('click', (e) => {
     if(e.target.tagName === 'BUTTON' || e.target.tagName === 'AUDIO' || e.target.tagName === 'CANVAS') return;
@@ -589,20 +612,49 @@ document.body.addEventListener('click', (e) => {
 });
 
 function startProceduralMusic() {
-    if (bgMusicInterval) return; 
+
+    if (bgMusicInterval) return;
+
+    // REANUDAR AUDIO EN MÓVILES
+    if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
+
     bgMusicInterval = setInterval(() => {
-        if (!audioCtx || audioCtx.state === 'suspended') return;
+
         try {
+
             const osc = audioCtx.createOscillator();
             const gainNode = audioCtx.createGain();
+
             osc.type = 'triangle';
-            osc.frequency.setValueAtTime(MELODY_NOTES[melodyIndex], audioCtx.currentTime);
-            gainNode.gain.setValueAtTime(0.015, audioCtx.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + NOTE_TIME - 0.03);
-            osc.connect(gainNode); gainNode.connect(audioCtx.destination);
-            osc.start(); osc.stop(audioCtx.currentTime + NOTE_TIME);
+
+            osc.frequency.setValueAtTime(
+                MELODY_NOTES[melodyIndex],
+                audioCtx.currentTime
+            );
+
+            // MÁS VOLUMEN EN MÓVIL
+            gainNode.gain.setValueAtTime(
+                0.035,
+                audioCtx.currentTime
+            );
+
+            gainNode.gain.exponentialRampToValueAtTime(
+                0.001,
+                audioCtx.currentTime + NOTE_TIME - 0.03
+            );
+
+            osc.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            osc.start();
+            osc.stop(audioCtx.currentTime + NOTE_TIME);
+
             melodyIndex = (melodyIndex + 1) % MELODY_NOTES.length;
+
         } catch(e) {}
+
     }, NOTE_TIME * 1000);
 }
 
@@ -611,16 +663,30 @@ function stopProceduralMusic() {
 }
 
 function startGame(){
-    if (!audioCtx) { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
-    if (audioCtx.state === 'suspended') { audioCtx.resume(); }
-    startProceduralMusic();
 
+    // FORZAR ACTIVACIÓN DE AUDIO EN MÓVIL
+    if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+
+    // iPhone / Android fix
+    if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
+
+    // REINICIO COMPLETO
     currentQuestion = 0;
     lives = 1;
     maxLives = 1;
-    streak = 0; 
+    streak = 0;
+
+    // INICIAR MÚSICA PROCEDURAL
+    stopProceduralMusic();
+    startProceduralMusic();
+
     startScreen.classList.add("hidden");
     gameScreen.classList.remove("hidden");
+
     renderLives();
     loadQuestion();
     updateProgress();
@@ -836,11 +902,10 @@ function calculateScratchPercentage() {
     }
 }
 
-/* RECOMPENSA DE VIDA ADICIONAL POR EL BESO */
 function completeScratchCard() {
-    maxLives = 2; // Expandimos visualmente el contenedor a 2 corazones posibles
-    lives = 2;    // Otorgamos la vida extra ganada por el beso
-    renderLives(); // Forzamos redibujado de la interfaz de vidas
+    maxLives = 2; 
+    lives = 2;    
+    renderLives(); 
 
     streak++; 
     updateProgress();
@@ -945,20 +1010,6 @@ function checkFinalMemory(correct, buttonElement){
     }
 }
 
-function typeWriter(text, elementId, speed) {
-    let i = 0;
-    const elem = document.getElementById(elementId);
-    elem.textContent = "";
-    function type() {
-        if (i < text.length) {
-            elem.textContent += text.charAt(i);
-            i++;
-            setTimeout(type, speed);
-        }
-    }
-    type();
-}
-
 function launchConfetti() {
     var duration = 2 * 1000;
     var end = Date.now() + duration;
@@ -970,23 +1021,45 @@ function launchConfetti() {
 }
 
 function winGame(){
-    stopProceduralMusic(); 
+    stopProceduralMusic();
     winScreen.classList.remove("hidden");
     launchConfetti();
-    typeWriter(GIFT_MESSAGE, "giftMessage", 50);
+}
+
+function showRewardScreen(){
+    winScreen.classList.add("hidden");
+    rewardScreen.classList.remove("hidden");
+    confetti({
+        particleCount: 250,
+        spread: 120,
+        origin:{ y:0.6 }
+    });
 }
 
 function loseGame(){
     stopProceduralMusic(); 
+    songPlayer.pause();
+    songPlayer.currentTime = 0;
     loseScreen.classList.remove("hidden");
 }
 
 function restartGame(){
     stopProceduralMusic();
+    songPlayer.pause();
+    songPlayer.currentTime = 0;
+    
+    // Parar y reiniciar la música de fondo al volver al inicio
+    bgMusic.pause();
+    bgMusic.currentTime = 0;
+    
+    currentQuestion = 0;
     lives = 1;
     maxLives = 1;
+    streak = 0;
+    
     loseScreen.classList.add("hidden");
     winScreen.classList.add("hidden");
+    rewardScreen.classList.add("hidden");
     finalMemoryGameScreen.classList.add("hidden");
     gameScreen.classList.add("hidden");
     miniGameScreen.classList.add("hidden");
@@ -994,10 +1067,12 @@ function restartGame(){
     musicGameScreen.classList.add("hidden");
     startScreen.classList.remove("hidden");
 }
-
 </script>
+
 <div class="floating-hearts">
     <span>❤️</span><span>💖</span><span>💕</span><span>❤️</span><span>💗</span>
 </div>
 </body>
 </html>
+
+```
