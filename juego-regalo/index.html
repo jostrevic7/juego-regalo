@@ -16,7 +16,7 @@
     --secondary:#ff85a2;
     --dark:#2b2b2b;
     --white:#ffffff;
-    --success:#2ecc71;
+    --success: #2ecc71;
 }
 
 *{
@@ -32,7 +32,7 @@ body{
     display:flex;
     justify-content:center;
     align-items:center;
-    background:linear-gradient(135deg,#ff7ea3,#ffb3c7,#ffd8e4);
+    background: linear-gradient(135deg, #ff7ea3, #ffb3c7, #ffd8e4);
     position:relative;
 }
 
@@ -48,20 +48,12 @@ body::after{
     animation:floatBg 10s infinite alternate;
 }
 
-body::before{
-    top:-100px;
-    left:-100px;
-}
-
-body::after{
-    bottom:-100px;
-    right:-100px;
-    animation-delay:5s;
-}
+body::before{ top:-100px; left:-100px; }
+body::after{ bottom:-100px; right:-100px; animation-delay:5s; }
 
 @keyframes floatBg{
-    from{transform:translateY(0px);}
-    to{transform:translateY(40px);}
+    from{ transform:translateY(0px); }
+    to{ transform:translateY(40px); }
 }
 
 .container{
@@ -71,6 +63,7 @@ body::after{
     z-index:2;
 }
 
+/* TARJETA */
 .card{
     background:rgba(255,255,255,.35);
     backdrop-filter:blur(20px);
@@ -78,58 +71,46 @@ body::after{
     border-radius:32px;
     padding:35px 25px;
     text-align:center;
-    box-shadow:0 10px 40px rgba(0,0,0,.12);
+    box-shadow: 0 10px 40px rgba(0,0,0,.12);
     animation:fadeUp .6s ease;
-    display:flow-root;
-    transition:background-color .3s ease;
-    position:relative;
+    display: flow-root;
+    transition: background-color 0.3s ease;
+    position: relative;
 }
 
 @keyframes fadeUp{
-    from{
-        opacity:0;
-        transform:translateY(30px);
-    }
-    to{
-        opacity:1;
-        transform:translateY(0);
-    }
+    from{ opacity:0; transform:translateY(30px); }
+    to{ opacity:1; transform:translateY(0); }
 }
 
-.shake{
-    animation:shakeAnim .4s ease;
+/* EFECTOS DE ANIMACIÓN */
+.shake { animation: shakeAnim 0.4s ease; }
+@keyframes shakeAnim {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-10px); }
+    40%, 80% { transform: translateX(10px); }
 }
 
-@keyframes shakeAnim{
-    0%,100%{transform:translateX(0);}
-    20%,60%{transform:translateX(-10px);}
-    40%,80%{transform:translateX(10px);}
+/* EFECTO DE ACIERTO EN EL BOTÓN */
+.answer-correct {
+    background-color: var(--success) !important;
+    color: white !important;
+    border-color: rgba(255,255,255,0.6) !important;
+    transition: background-color 0.15s ease, color 0.15s ease;
 }
 
-.answer-correct{
-    background-color:var(--success)!important;
-    color:white!important;
-    border-color:rgba(255,255,255,.6)!important;
-    transition:background-color .15s ease,color .15s ease;
+/* CORAZONES AL HACER CLIC EN PANTALLA */
+.click-heart {
+    position: fixed;
+    font-size: 28px;
+    pointer-events: none;
+    z-index: 999;
+    animation: heartBurst 0.7s ease-out forwards;
 }
 
-.click-heart{
-    position:fixed;
-    font-size:28px;
-    pointer-events:none;
-    z-index:999;
-    animation:heartBurst .7s ease-out forwards;
-}
-
-@keyframes heartBurst{
-    0%{
-        transform:translate(-50%,-50%) scale(.4);
-        opacity:1;
-    }
-    100%{
-        transform:translate(-50%,-120px) scale(1.4) rotate(15deg);
-        opacity:0;
-    }
+@keyframes heartBurst {
+    0% { transform: translate(-50%, -50%) scale(0.4); opacity: 1; }
+    100% { transform: translate(-50%, -120px) scale(1.4) rotate(15deg); opacity: 0; }
 }
 
 h1{
@@ -157,23 +138,18 @@ p{
     border-radius:18px;
     cursor:pointer;
     transition:.25s;
-    box-shadow:0 8px 20px rgba(0,0,0,.1);
+    box-shadow: 0 8px 20px rgba(0,0,0,.1);
 }
 
-.btn:hover{
-    transform:translateY(-3px) scale(1.03);
-}
-
-.btn:active{
-    transform:scale(.97);
-}
+.btn:hover{ transform:translateY(-3px) scale(1.03); }
+.btn:active{ transform:scale(.97); }
 
 .lives{
     display:flex;
     justify-content:center;
     gap:10px;
     margin-bottom:18px;
-    min-height:38px;
+    min-height: 38px;
 }
 
 .heart{
@@ -182,16 +158,12 @@ p{
 }
 
 @keyframes pulse{
-    0%{transform:scale(1);}
-    50%{transform:scale(1.15);}
-    100%{transform:scale(1);}
+    0%{ transform:scale(1); }
+    50%{ transform:scale(1.15); }
+    100%{ transform:scale(1); }
 }
 
-.lost{
-    opacity:.25;
-    transform:scale(.8);
-    animation:none;
-}
+.lost{ opacity:.25; transform:scale(.8); animation:none; }
 
 .question-level{
     display:inline-block;
@@ -207,7 +179,7 @@ p{
 
 .question{
     color:white;
-    text-shadow:0 3px 10px rgba(0,0,0,.22);
+    text-shadow: 0 3px 10px rgba(0,0,0,.22);
     font-size:26px;
     font-weight:700;
     line-height:1.4;
@@ -229,67 +201,57 @@ p{
     font-size:15px;
     font-weight:500;
     cursor:pointer;
-    transition:background-color .25s ease,color .25s ease,transform .2s ease;
+    transition: background-color 0.25s ease, color 0.25s ease, transform 0.2s ease;
     backdrop-filter:blur(10px);
     border:2px solid rgba(255,255,255,.35);
-    box-shadow:0 6px 18px rgba(0,0,0,.08);
+    box-shadow: 0 6px 18px rgba(0,0,0,.08);
 }
 
-.answer-btn:hover:not(.answer-correct){
-    transform:translateY(-2px);
-    background:rgba(255,255,255,.35);
+.answer-btn:hover:not(.answer-correct){ transform:translateY(-2px); background:rgba(255,255,255,.35); }
+.answer-btn:active{ transform:scale(.98); }
+
+/* BARRA DE PROGRESO DE CARRETERA */
+.progress-road {
+    width: 100%;
+    height: 24px;
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 999px;
+    margin-bottom: 25px;
+    position: relative;
+    border: 2px dashed rgba(255,255,255,0.4);
+    display: flex;
+    align-items: center;
 }
 
-.answer-btn:active{
-    transform:scale(.98);
+.car-container {
+    height: 100%;
+    width: 0%; 
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
 }
 
-.progress-road{
-    width:100%;
-    height:24px;
-    background:rgba(0,0,0,.15);
-    border-radius:999px;
-    margin-bottom:25px;
-    position:relative;
-    border:2px dashed rgba(255,255,255,.4);
-    display:flex;
-    align-items:center;
+.car-emoji {
+    position: absolute;
+    right: -10px;
+    top: -5px;
+    font-size: 22px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+    transition: transform 0.2s ease;
 }
 
-.car-container{
-    height:100%;
-    width:0%;
-    transition:width .5s cubic-bezier(.4,0,.2,1);
-    position:relative;
+.gift-emoji {
+    position: absolute;
+    right: 8px;
+    font-size: 18px;
 }
 
-.car-emoji{
-    position:absolute;
-    right:-10px;
-    top:-5px;
-    font-size:22px;
-    filter:drop-shadow(0 2px 4px rgba(0,0,0,.3));
+.gift-glowing {
+    animation: giftGlow 1.2s infinite alternate !important;
 }
 
-.gift-emoji{
-    position:absolute;
-    right:8px;
-    font-size:18px;
-}
-
-.gift-glowing{
-    animation:giftGlow 1.2s infinite alternate!important;
-}
-
-@keyframes giftGlow{
-    from{
-        transform:translateY(0px) scale(1);
-        filter:drop-shadow(0 0 5px #fff);
-    }
-    to{
-        transform:translateY(-6px) scale(1.18);
-        filter:drop-shadow(0 0 15px #fff) drop-shadow(0 0 25px var(--secondary));
-    }
+@keyframes giftGlow {
+    from { transform: translateY(0px) scale(1); filter: drop-shadow(0 0 5px #fff); }
+    to { transform: translateY(-6px) scale(1.18); filter: drop-shadow(0 0 15px #fff) drop-shadow(0 0 25px var(--secondary)); }
 }
 
 .mini-hearts{
@@ -309,82 +271,84 @@ p{
     cursor:pointer;
     transition:.25s;
     background:rgba(255,255,255,.85);
-    box-shadow:0 10px 25px rgba(0,0,0,.12);
+    box-shadow: 0 10px 25px rgba(0,0,0,.12);
 }
 
-.mini-heart:hover{
-    transform:translateY(-5px) scale(1.08);
+.mini-heart:hover{ transform: translateY(-5px) scale(1.08); }
+
+/* CONTENEDORES RASCA Y GANA */
+.scratch-container {
+    position: relative;
+    width: 280px;
+    height: 200px;
+    margin: 25px auto;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    background: #fff;
 }
 
-.scratch-container{
-    position:relative;
-    width:280px;
-    height:200px;
-    margin:25px auto;
-    border-radius:20px;
-    overflow:hidden;
-    box-shadow:0 8px 25px rgba(0,0,0,.2);
-    background:#fff;
+.scratch-bg-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    text-align: center;
+    background-size: cover;
+    background-position: center;
 }
 
-.scratch-bg-content{
-    position:absolute;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    padding:20px;
-    text-align:center;
+.scratch-bg-content::before {
+    content: "";
+    position: absolute;
+    top:0; left:0; width:100%; height:100%;
+    background: rgba(255, 255, 255, 0.88);
+    z-index: 1;
 }
 
-.scratch-bg-content::before{
-    content:"";
-    position:absolute;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:rgba(255,255,255,.88);
+.scratch-text-inner {
+    position: relative;
+    z-index: 2;
+    color: #4a2834;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 1.5;
 }
 
-.scratch-text-inner{
-    position:relative;
-    z-index:2;
-    color:#4a2834;
-    font-weight:700;
-    font-size:14px;
-    line-height:1.5;
+.scratch-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><text y="18" font-size="16">🪙</text></svg>'), auto;
+    touch-action: none;
+    z-index: 3;
 }
 
-.scratch-canvas{
-    position:absolute;
-    top:0;
-    left:0;
-    z-index:3;
-    touch-action:none;
-}
+.music-player{ width:100%; margin: 25px 0; border-radius:16px; }
 
-.music-player{
-    width:100%;
-    margin:25px 0;
-    border-radius:16px;
-}
-
-.result-icon{
-    font-size:90px;
-    margin-bottom:15px;
-    animation:bounceFinal 1s infinite alternate;
-}
+.result-icon{ font-size:90px; margin-bottom:15px; animation:bounceFinal 1s infinite alternate; }
 
 @keyframes bounceFinal{
-    from{transform:translateY(0px);}
-    to{transform:translateY(-8px);}
+    from{ transform:translateY(0px); }
+    to{ transform:translateY(-8px); }
 }
 
+.gift{
+    margin-top:20px;
+    color:white;
+    font-size:22px;
+    font-weight:700;
+    line-height:1.5;
+    min-height: 80px;
+}
+
+/* NUEVOS ESTILOS RECOMPENSA FINAL */
 .final-photo{
     width:100%;
     margin-top:25px;
@@ -400,396 +364,317 @@ p{
 }
 
 @keyframes pulseUnlock{
-    0%{transform:scale(1);}
-    50%{transform:scale(1.05);}
-    100%{transform:scale(1);}
+    0%{ transform:scale(1); }
+    50%{ transform:scale(1.05); }
+    100%{ transform:scale(1); }
 }
 
-.memory-grid{
-    column-count:3;
-    column-gap:12px;
-    margin-top:25px;
-    width:100%;
+.floating-hearts span{
+    position:absolute;
+    bottom:-50px;
+    font-size:30px;
+    animation:floatHeart 10s linear infinite;
+    opacity:.5;
 }
+
+.floating-hearts span:nth-child(1){ left:10%; animation-duration:8s; }
+.floating-hearts span:nth-child(2){ left:30%; animation-duration:11s; }
+.floating-hearts span:nth-child(3){ left:50%; animation-duration:9s; }
+.floating-hearts span:nth-child(4){ left:70%; animation-duration:12s; }
+.floating-hearts span:nth-child(5){ left:90%; animation-duration:7s; }
+
+@keyframes floatHeart{
+    from{ transform:translateY(0); opacity:0; }
+    20%{ opacity:.5; }
+    to{ transform:translateY(-120vh); opacity:0; }
+}
+
+/* RECUERDOS MASONRY */
+.memory-grid {
+    column-count: 3;
+    column-gap: 12px;
+    margin-top: 25px;
+    width: 100%;
+}
+
+@media(max-width:480px){ .memory-grid { column-count: 2; } }
+
+.memory-btn {
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 12px;
+    border: none;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.5s ease, opacity 0.5s ease;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+.memory-btn:hover:not(.memory-incorrect) {
+    transform: scale(1.05) translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+}
+
+.memory-btn img { width: 100%; height: auto; display: block; object-fit: cover; }
+
+.memory-btn.memory-incorrect {
+    filter: grayscale(100%);
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+    box-shadow: none;
+}
+
+.hidden{ display:none !important; }
 
 @media(max-width:480px){
-    .memory-grid{
-        column-count:2;
-    }
-}
-
-.memory-btn{
-    display:inline-block;
-    width:100%;
-    margin-bottom:12px;
-    border:none;
-    background:none;
-    padding:0;
-    cursor:pointer;
-    transition:.3s;
-    border-radius:16px;
-    overflow:hidden;
-    box-shadow:0 6px 15px rgba(0,0,0,.15);
-}
-
-.memory-btn img{
-    width:100%;
-    display:block;
-}
-
-.memory-btn.memory-incorrect{
-    filter:grayscale(100%);
-    opacity:.5;
-    pointer-events:none;
-}
-
-.hidden{
-    display:none!important;
+    .card{ padding:30px 20px; border-radius:28px; }
+    .question{ font-size:22px; }
 }
 </style>
 </head>
-
 <body>
 
 <div class="container">
 
-<div id="startScreen" class="card">
-    <h1>JUEGO DE PREGUNTAS</h1>
+    <div id="startScreen" class="card">
+        <h1>JUEGO DE PREGUNTAS</h1>
+        <p>
+            Responde todas las preguntas correctamente para ganar un premio especial.
+            <br><br>
+            <strong>⚠️ MODO CRÍTICO:</strong> Solo tienes 1 vida. Si fallas una sola vez, perderás el juego... a menos que encuentres una forma de salvarte.
+        </p>
+        <button class="btn" onclick="startGame()">Comenzar</button>
+    </div>
 
-    <p>
-        Responde todas las preguntas correctamente
-        para ganar un premio especial ❤️
-    </p>
-
-    <button class="btn" onclick="startGame()">
-        Comenzar
-    </button>
-</div>
-
-<div id="gameScreen" class="card hidden">
-
-    <div class="progress-road">
-        <div class="car-container" id="carContainer">
-            <span class="car-emoji" id="carEmoji">🚗</span>
+    <div id="gameScreen" class="card hidden">
+        <div class="progress-road">
+            <div class="car-container" id="carContainer">
+                <span class="car-emoji" id="carEmoji">🚗</span>
+            </div>
+            <span class="gift-emoji gift-glowing" id="progressGift">🎁</span>
         </div>
-
-        <span class="gift-emoji gift-glowing">🎁</span>
+        <div class="lives" id="lives"></div>
+        <div id="questionLevel" class="question-level"></div>
+        <div class="question" id="questionText"></div>
+        <div class="answers" id="answersContainer"></div>
     </div>
 
-    <div class="lives" id="lives"></div>
-
-    <div id="questionLevel" class="question-level"></div>
-
-    <div class="question" id="questionText"></div>
-
-    <div class="answers" id="answersContainer"></div>
-
-</div>
-
-<div id="miniGameScreen" class="card hidden">
-
-    <h1>💖</h1>
-
-    <p>Encuentra el corazón correcto</p>
-
-    <div class="mini-hearts">
-        <button class="mini-heart" onclick="checkMiniGame(false,this)">💕</button>
-        <button class="mini-heart" onclick="checkMiniGame(false,this)">💘</button>
-        <button class="mini-heart" onclick="checkMiniGame(true,this)">🩷</button>
-        <button class="mini-heart" onclick="checkMiniGame(false,this)">💖</button>
+    <div id="miniGameScreen" class="card hidden">
+        <h1>💖</h1>
+        <p>Encuentra el corazón correcto para continuar</p>
+        <div class="mini-hearts">
+            <button class="mini-heart" onclick="checkMiniGame(false, this)">💕</button>
+            <button class="mini-heart" onclick="checkMiniGame(false, this)">💘</button>
+            <button class="mini-heart" onclick="checkMiniGame(true, this)">🩷</button>
+            <button class="mini-heart" onclick="checkMiniGame(false, this)">💖</button>
+        </div>
     </div>
 
-</div>
-
-<div id="musicGameScreen" class="card hidden">
-
-    <h1>🎵 Adivina la canción 🎵</h1>
-
-    <p>Escucha el audio y adivina cuál es</p>
-
-    <audio id="songPlayer" controls class="music-player">
-        <source src="audio/videoplayback.mp3" type="audio/mpeg">
-    </audio>
-
-    <div class="answers">
-        <button class="answer-btn" id="musBtn1"></button>
-        <button class="answer-btn" id="musBtn2"></button>
-        <button class="answer-btn" id="musBtn3"></button>
-        <button class="answer-btn" id="musBtn4"></button>
+    <div id="scratchScreen" class="card hidden">
+        <h1>✨ Tarjeta Rasca ✨</h1>
+        <p>Rasca la superficie gris para descubrir lo que oculta...</p>
+        <div class="scratch-container">
+            <div class="scratch-bg-content">
+                <div class="scratch-text-inner">
+                    BONO DESBLOQUEADO<br><br>
+                    SI LE DAS UN BESO A TU NOVIO DESBLOQUEAS UNA VIDA EXTRA 😉
+                </div>
+            </div>
+            <canvas id="scratchCanvas" width="280" height="200" class="scratch-canvas"></canvas>
+        </div>
+        <button id="scratchBtn" class="btn hidden" onclick="completeScratchCard()">¡Beso dado, reclamar vida! ❤️</button>
     </div>
 
-</div>
+    <div id="musicGameScreen" class="card hidden">
+        <h1>🎵 Adivina la canción 🎵</h1>
+        <p>Escucha el audio y adivina cuál es</p>
+        <audio id="songPlayer" controls class="music-player">
+            <source src="audio/videoplayback.mp3" type="audio/mpeg">
+        </audio>
+        <div class="answers">
+            <button class="answer-btn" id="musBtn1"></button>
+            <button class="answer-btn" id="musBtn2"></button>
+            <button class="answer-btn" id="musBtn3"></button>
+            <button class="answer-btn" id="musBtn4"></button>
+        </div>
+    </div>
 
-<div id="finalMemoryGameScreen" class="card hidden">
+    <div id="finalMemoryGameScreen" class="card hidden">
+        <h1>📸 Última prueba</h1>
+        <div class="lives" id="finalLives"></div>
+        <p>Elige mi recuerdo favorito ❤️</p>
+        <p>Solo uno es el correcto...</p>
+        
+        <div class="memory-grid" id="memoryGridContainer"></div>
+    </div>
 
-    <h1>📸 Última prueba</h1>
+    <div id="winScreen" class="card hidden">
+        <div class="result-icon">💖</div>
+        
+        <p style="margin-top:15px; font-size:16px; line-height:1.8; color:white;">
+            MUY BIEN AMOR ❤️
+            <br><br>
+            Gracias por estar conmigo,por hacerme feliz y por convertirte en la persona más importante de mi vida.
+            <br><br>
+            Quiero seguir viviendo muchísimos momentos contigo.
+            asi que aqui tienes solo una pequeña sorpresa para recordarte lo mucho que te amo 💕
+        </p>
+        <img src="img/final.jpg" class="final-photo">
+        <button class="btn unlock-btn" onclick="showRewardScreen()">
+            🔓 DESBLOQUEAR RECOMPENSA
+        </button>
+    </div>
 
-    <div class="lives" id="finalLives"></div>
+    <div id="rewardScreen" class="card hidden">
+        <div class="result-icon">🎁</div>
+        <h1>RECOMPENSA DESBLOQUEADA</h1>
+        <p style="margin-top:25px; font-size:28px; font-weight:700; color:white; line-height:1.5;">
+            ABRE LA GUANTERA
+            <br>
+            DEL COCHE ❤️
+        </p>
+    </div>
 
-    <p>Elige mi recuerdo favorito ❤️</p>
-
-    <div class="memory-grid" id="memoryGridContainer"></div>
-
-</div>
-
-<div id="winScreen" class="card hidden">
-
-    <div class="result-icon">💖</div>
-
-    <h1>Lo conseguiste amor</h1>
-
-    <p style="margin-top:15px;font-size:16px;line-height:1.8;color:white;">
-
-        Sabía que ibas a conseguirlo ❤️
-
-        <br><br>
-
-        Gracias por estar conmigo,
-        por cuidarme,
-        por hacerme feliz
-        y por convertirte en la persona más importante de mi vida.
-
-        <br><br>
-
-        Quiero seguir viviendo muchísimos momentos contigo 💕
-
-    </p>
-
-    <img src="img/final.jpg" class="final-photo">
-
-    <button class="btn unlock-btn" onclick="showRewardScreen()">
-        🔓 DESBLOQUEAR RECOMPENSA
-    </button>
-
-</div>
-
-<div id="rewardScreen" class="card hidden">
-
-    <div class="result-icon">🎁</div>
-
-    <h1>RECOMPENSA DESBLOQUEADA</h1>
-
-    <p style="margin-top:25px;font-size:28px;font-weight:700;color:white;line-height:1.5;">
-
-        ABRE LA GUANTERA
-        <br>
-        DEL COCHE ❤️
-
-    </p>
-
-</div>
-
-<div id="loseScreen" class="card hidden">
-
-    <div class="result-icon">💔</div>
-
-    <h1>Fin del juego</h1>
-
-    <p>Te has quedado sin vidas.</p>
-
-    <button class="btn" onclick="restartGame()">
-        Intentar de nuevo
-    </button>
-
-</div>
+    <div id="loseScreen" class="card hidden">
+        <div class="result-icon">💔</div>
+        <h1>Fin del juego</h1>
+        <p>Te has quedado sin vidas.</p>
+        <button class="btn" onclick="restartGame()">Intentar de nuevo</button>
+    </div>
 
 </div>
 
 <script>
+const GIFT_MESSAGE = "";
 
 const QUESTIONS = [
-
-{
-level:"🟢 Fácil",
-question:"¿Qué llevaba puesto el día que nos conocimos?",
-answers:["Una sudadera","Una camisa","Un plátano","Un polo"],
-correct:2
-},
-
-{
-level:"🟢 Fácil",
-question:"¿Cuál fue mi jugador favorito de la infancia?",
-answers:["Cristiano Ronaldo","Lionel Messi","Gareth Bale","Oscar Cañellas"],
-correct:2
-},
-
-{
-level:"🟢 Fácil",
-question:"¿Qué siento cuando estoy contigo?",
-answers:["Paz","Felicidad","Confianza","Todas"],
-correct:3
-},
-
-{
-level:"🟡 Media",
-question:"¿Qué es lo que más me gusta de ti?",
-answers:["Tus cejas","Tus ojos","Tu sonrisa","Tu pelo"],
-correct:1
-},
-
-{
-level:"🟡 Media",
-question:"¿Qué plan elegiría siempre contigo?",
-answers:["Salir de fiesta","Irnos lejos juntos","Quedarnos en casa","Dormir"],
-correct:1
-},
-
-{
-level:"🔴 Difícil",
-question:"¿Qué comida me gusta más?",
-answers:["Kebab","Paella sin verdura","McFlurry","Macarrones"],
-correct:1
-}
-
+    { level: "🟢 Fácil", question:"¿Qué llevaba puesto el día que nos conocimos?", answers:["Una sudadera","Una camisa","Un plátano","Un polo"], correct:2 },
+    { level: "🟢 Fácil", question:"¿Cuál fue mi jugador favorito de la infancia?", answers:["Cristiano Ronaldo","Lionel Messi","Gareth Bale","Oscar Cañellas"], correct:2 },
+    { level: "🟢 Fácil", question:"¿Cual es el mejor Kebab de Novelda?", answers:["Roma","Paris","Manila"], correct:2 },
+    { level: "🟢 Fácil", question:"¿Qué siento cuando estoy contigo?", answers:["Paz","Felicidad","Confianza","Todas"], correct:3 },
+    { level: "🟡 Media", question:"¿Qué es lo que me gusta más de ti?", answers:["Tus cejas","Tus ojos","Tu sonrisa","Tu pelo"], correct:1 },
+    { level: "🟡 Media", question:"¿Qué es lo que más me cuesta?", answers:["Madrugar","Esperar","Estudiar","Ahorrar dinero"], correct:0 },
+    { level: "🟡 Media", question:"¿Qué plan elegiría siempre contigo?", answers:["Salir de fiesta","Irnos lejos juntos","Quedarnos en casa","Dormir"], correct:1 },
+    { level: "🟡 Media", question:"¿Qué es algo que siempre digo y odias?", answers:["Te quiero","STOP","Vale","Que guapo soy"], correct:2 },
+    { level: "🟡 Media", question:"¿Cuál es mi sueño o meta más grande?", answers:["Ser jugador profesional","Formar una familia contigo","Sacarme el grado superior de jardineria","Ser famoso"], correct:1 },
+    { level: "🔴 Difícil", question:"¿Qué comida me gusta más?", answers:["Kebab","Paella sin verdura","McFlurry","Macarrones"], correct:1 },
+    { level: "🔴 Difícil", question:"¿Cancion favorita?", answers:["Kndel el Clandestino","Romii","Paño nuevo","Desenfocao"], correct:3 }
 ];
 
 let currentQuestion = 0;
-let lives = 1;
-let maxLives = 1;
-let streak = 0;
+let lives = 1;     
+let maxLives = 1;  
+let streak = 0; 
+let audioCtx = null; 
 
-let audioCtx = null;
-
-let synthOsc = null;
-let synthGain = null;
-let melodyInterval = null;
-
-const MELODY_NOTES = [
-261.63,
-329.63,
-392.00,
-440.00,
-392.00,
-329.63,
-293.66,
-349.23
-];
-
+let proceduralMusicStarted = false;
 let melodyIndex = 0;
+const MELODY_NOTES = [261.63, 329.63, 392.00, 440.00, 392.00, 329.63, 293.66, 349.23];
+const NOTE_TIME = 0.35; 
 
 const startScreen = document.getElementById("startScreen");
 const gameScreen = document.getElementById("gameScreen");
-const miniGameScreen = document.getElementById("miniGameScreen");
-const musicGameScreen = document.getElementById("musicGameScreen");
-const finalMemoryGameScreen = document.getElementById("finalMemoryGameScreen");
 const winScreen = document.getElementById("winScreen");
-const rewardScreen = document.getElementById("rewardScreen");
 const loseScreen = document.getElementById("loseScreen");
-
+const rewardScreen = document.getElementById("rewardScreen");
 const questionText = document.getElementById("questionText");
 const answersContainer = document.getElementById("answersContainer");
 const livesContainer = document.getElementById("lives");
 const finalLivesContainer = document.getElementById("finalLives");
-
 const carContainer = document.getElementById("carContainer");
 const carEmoji = document.getElementById("carEmoji");
-
+const miniGameScreen = document.getElementById("miniGameScreen");
+const scratchScreen = document.getElementById("scratchScreen");
+const musicGameScreen = document.getElementById("musicGameScreen");
 const songPlayer = document.getElementById("songPlayer");
-
+const finalMemoryGameScreen = document.getElementById("finalMemoryGameScreen");
 const memoryGridContainer = document.getElementById("memoryGridContainer");
 
-document.body.addEventListener("click",(e)=>{
+const scratchCanvas = document.getElementById("scratchCanvas");
+const scratchCtx = scratchCanvas.getContext("2d");
+let isScratching = false;
 
-    if(
-        e.target.tagName === "BUTTON" ||
-        e.target.tagName === "AUDIO"
-    ) return;
-
-    const heart = document.createElement("span");
-
-    heart.className = "click-heart";
-
-    const hearts = ["❤️","💖","💕","💘"];
-
-    heart.textContent = hearts[
-        Math.floor(Math.random()*hearts.length)
-    ];
-
-    heart.style.left = e.clientX + "px";
-    heart.style.top = e.clientY + "px";
-
+/* EFECTO INTERACTIVO CLICK */
+document.body.addEventListener('click', (e) => {
+    if(e.target.tagName === 'BUTTON' || e.target.tagName === 'AUDIO' || e.target.tagName === 'CANVAS') return;
+    const heart = document.createElement('span');
+    heart.className = 'click-heart';
+    const heartTypes = ["❤️", "💖", "💕", "💘", "💗"];
+    heart.textContent = heartTypes[Math.floor(Math.random() * heartTypes.length)];
+    heart.style.left = e.clientX + 'px';
+    heart.style.top = e.clientY + 'px';
     document.body.appendChild(heart);
-
-    setTimeout(()=>{
-        heart.remove();
-    },700);
-
+    setTimeout(() => heart.remove(), 700);
 });
 
-function startProceduralMusic(){
+function startProceduralMusic() {
 
-    if(melodyInterval) return;
+    if (proceduralMusicStarted) return;
 
-    synthOsc = audioCtx.createOscillator();
-    synthGain = audioCtx.createGain();
+    proceduralMusicStarted = true;
 
-    synthOsc.type = "triangle";
+    const playNote = () => {
 
-    synthGain.gain.value = 0.02;
+        if (!audioCtx) return;
 
-    synthOsc.connect(synthGain);
-    synthGain.connect(audioCtx.destination);
+        const osc = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
 
-    synthOsc.start();
+        osc.type = 'triangle';
 
-    synthOsc.frequency.setValueAtTime(
-        MELODY_NOTES[0],
-        audioCtx.currentTime
-    );
-
-    melodyInterval = setInterval(()=>{
-
-        melodyIndex++;
-
-        if(melodyIndex >= MELODY_NOTES.length){
-            melodyIndex = 0;
-        }
-
-        synthOsc.frequency.linearRampToValueAtTime(
+        osc.frequency.setValueAtTime(
             MELODY_NOTES[melodyIndex],
-            audioCtx.currentTime + 0.15
+            audioCtx.currentTime
         );
 
-    },350);
+        gainNode.gain.setValueAtTime(0.03, audioCtx.currentTime);
+
+        gainNode.gain.exponentialRampToValueAtTime(
+            0.001,
+            audioCtx.currentTime + NOTE_TIME
+        );
+
+        osc.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+
+        osc.start();
+        osc.stop(audioCtx.currentTime + NOTE_TIME);
+
+        melodyIndex = (melodyIndex + 1) % MELODY_NOTES.length;
+
+        setTimeout(playNote, NOTE_TIME * 1000);
+    };
+
+    playNote();
 }
 
-function stopProceduralMusic(){
-
-    if(melodyInterval){
-        clearInterval(melodyInterval);
-        melodyInterval = null;
-    }
-
-    if(synthOsc){
-        synthOsc.stop();
-        synthOsc.disconnect();
-        synthOsc = null;
-    }
-
-    if(synthGain){
-        synthGain.disconnect();
-        synthGain = null;
-    }
+function stopProceduralMusic() {
+    proceduralMusicStarted = false;
 }
-
 async function startGame(){
 
-    try{
-
-        if(!audioCtx){
-            audioCtx = new (
-                window.AudioContext ||
-                window.webkitAudioContext
-            )();
-        }
-
-        await audioCtx.resume();
-
-        startProceduralMusic();
-
-    }catch(err){
-        console.log(err);
+    if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     }
+
+    // DESBLOQUEAR AUDIO EN MÓVILES
+    if (audioCtx.state === 'suspended') {
+        await audioCtx.resume();
+    }
+
+    // SONIDO SILENCIOSO PARA ACTIVAR IOS/ANDROID
+    const buffer = audioCtx.createBuffer(1, 1, 22050);
+    const source = audioCtx.createBufferSource();
+
+    source.buffer = buffer;
+    source.connect(audioCtx.destination);
+    source.start(0);
+
+    startProceduralMusic();
 
     currentQuestion = 0;
     lives = 1;
@@ -805,215 +690,238 @@ async function startGame(){
 }
 
 function renderLives(){
-
     livesContainer.innerHTML = "";
     finalLivesContainer.innerHTML = "";
-
-    for(let i=0;i<maxLives;i++){
-
+    for(let i=0; i<maxLives; i++){
         const heart = document.createElement("span");
-
         heart.innerHTML = "❤️";
-
         heart.classList.add("heart");
-
-        if(i >= lives){
-            heart.classList.add("lost");
-        }
-
-        livesContainer.appendChild(
-            heart.cloneNode(true)
-        );
-
+        if(i >= lives) heart.classList.add("lost");
+        livesContainer.appendChild(heart.cloneNode(true));
         finalLivesContainer.appendChild(heart);
     }
 }
 
 function loadQuestion(){
-
     if(currentQuestion >= QUESTIONS.length) return;
-
     const q = QUESTIONS[currentQuestion];
-
+    const totalInLevel = QUESTIONS.filter(item => item.level === q.level).length;
+    
+    let currentInLevel = 0;
+    for (let i = 0; i <= currentQuestion; i++) {
+        if (QUESTIONS[i].level === q.level) currentInLevel++;
+    }
+    
+    document.getElementById("questionLevel").textContent = `${q.level} (${currentInLevel}/${totalInLevel})`;
     questionText.textContent = q.question;
-
-    document.getElementById("questionLevel")
-    .textContent = q.level;
-
     answersContainer.innerHTML = "";
 
-    const answersMapped = q.answers.map((a,index)=>({
-        text:a,
-        isCorrect:index === q.correct
-    }));
+    const answersMapped = q.answers.map((answer, index) => {
+        return { text: answer, isCorrect: index === q.correct };
+    });
+    answersMapped.sort(() => Math.random() - 0.5);
 
-    answersMapped.sort(()=>Math.random()-0.5);
-
-    answersMapped.forEach(ans=>{
-
+    answersMapped.forEach((ans) => {
         const btn = document.createElement("button");
-
         btn.className = "answer-btn";
-
         btn.textContent = ans.text;
-
-        btn.onclick = ()=>checkAnswer(
-            ans.isCorrect,
-            btn
-        );
-
+        btn.onclick = () => checkAnswer(ans.isCorrect, btn);
         answersContainer.appendChild(btn);
-
     });
 }
 
 function updateProgress(){
-
     const totalQuestions = QUESTIONS.length;
-
-    const percent =
-    (currentQuestion / totalQuestions) * 88;
-
+    const maxProgressWidth = 88; 
+    const percent = (currentQuestion / totalQuestions) * maxProgressWidth;
     carContainer.style.width = percent + "%";
 
-    if(streak >= 4){
-        carEmoji.textContent = "🚀";
-    }
-    else if(streak >= 2){
-        carEmoji.textContent = "🏎️💨";
-    }
-    else{
-        carEmoji.textContent = "🚗";
-    }
+    if (streak >= 4) { carEmoji.textContent = "🚀"; } 
+    else if (streak >= 2) { carEmoji.textContent = "🏎️💨"; } 
+    else { carEmoji.textContent = "🚗"; }
 }
 
-function triggerAciertoEffect(button){
+function playSystemSound(type) {
+    try {
+        if (!audioCtx) return;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain); gain.connect(audioCtx.destination);
 
-    button.classList.add("answer-correct");
+        if (type === 'correct') {
+            osc.type = 'sine'; osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
+            osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1); gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.25); osc.start(); osc.stop(audioCtx.currentTime + 0.25);
+        } else if (type === 'error') {
+            osc.type = 'sawtooth'; osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+            osc.frequency.linearRampToValueAtTime(80, audioCtx.currentTime + 0.2); gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2); osc.start(); osc.stop(audioCtx.currentTime + 0.2);
+        }
+    } catch(e) {}
 }
 
-function triggerShake(el){
-
-    el.classList.add("shake");
-
-    setTimeout(()=>{
-        el.classList.remove("shake");
-    },400);
+function triggerShake(screenElement) {
+    playSystemSound('error');
+    screenElement.classList.add("shake");
+    setTimeout(() => screenElement.classList.remove("shake"), 400);
 }
 
-function checkAnswer(correct,button){
+function triggerAciertoEffect(buttonElement, screenElement) {
+    playSystemSound('correct'); 
+    buttonElement.classList.add('answer-correct');
+}
 
-    if(correct){
-
-        triggerAciertoEffect(button);
-
+function checkAnswer(isCorrect, buttonElement){
+    if(isCorrect){
+        triggerAciertoEffect(buttonElement, gameScreen);
         currentQuestion++;
-        streak++;
-
+        streak++; 
         updateProgress();
-
-        setTimeout(()=>{
-
+        
+        setTimeout(() => {
             if(currentQuestion === 3){
-
                 gameScreen.classList.add("hidden");
-
                 miniGameScreen.classList.remove("hidden");
-
                 return;
             }
-
+            if(currentQuestion === 6){ 
+                gameScreen.classList.add("hidden");
+                setupScratchCardScreen();
+                return;
+            }
+            if(currentQuestion === 9){
+                stopProceduralMusic(); 
+                gameScreen.classList.add("hidden");
+                setupMusicGameScreen();
+                return;
+            }
             if(currentQuestion >= QUESTIONS.length){
-
                 gameScreen.classList.add("hidden");
-
                 setupFinalMemoryScreen();
-
                 return;
             }
-
             loadQuestion();
-
-        },500);
-
+        }, 500);
     }else{
-
         lives--;
-        streak = 0;
-
+        streak = 0; 
         renderLives();
-        updateProgress();
-
+        updateProgress(); 
         triggerShake(gameScreen);
-
         if(lives <= 0){
-
-            setTimeout(()=>{
-
-                gameScreen.classList.add("hidden");
-
-                loseGame();
-
-            },500);
+            setTimeout(() => { gameScreen.classList.add("hidden"); loseGame(); }, 500);
         }
     }
 }
 
-function checkMiniGame(correct,button){
-
+function checkMiniGame(correct, buttonElement){
     if(correct){
-
-        triggerAciertoEffect(button);
-
-        streak++;
-
-        setTimeout(()=>{
-
+        triggerAciertoEffect(buttonElement, miniGameScreen);
+        streak++; 
+        setTimeout(() => {
             miniGameScreen.classList.add("hidden");
-
             gameScreen.classList.remove("hidden");
-
             loadQuestion();
-
-        },500);
-
+        }, 500);
     }else{
-
         lives--;
-
+        streak = 0; 
         renderLives();
-
         triggerShake(miniGameScreen);
-
         if(lives <= 0){
-
-            setTimeout(()=>{
-
-                miniGameScreen.classList.add("hidden");
-
-                loseGame();
-
-            },500);
+            setTimeout(() => { miniGameScreen.classList.add("hidden"); loseGame(); }, 500);
         }
     }
 }
 
-function setupMusicGameScreen(){
+/* RASCA Y GANA MOTOR */
+function setupScratchCardScreen() {
+    scratchScreen.classList.remove("hidden");
+    document.getElementById("scratchBtn").classList.add("hidden");
+    scratchCanvas.style.opacity = 1;
+    scratchCanvas.style.pointerEvents = "auto";
+    
+    scratchCtx.globalCompositeOperation = 'source-over';
+    scratchCtx.fillStyle = '#bdc3c7';
+    scratchCtx.fillRect(0, 0, scratchCanvas.width, scratchCanvas.height);
+    
+    scratchCtx.fillStyle = 'rgba(255,255,255,0.4)';
+    for(let i=0; i<80; i++) {
+        let rx = Math.random() * scratchCanvas.width;
+        let ry = Math.random() * scratchCanvas.height;
+        scratchCtx.fillRect(rx, ry, 2, 2);
+    }
+    
+    scratchCtx.fillStyle = '#636e72';
+    scratchCtx.font = 'bold 16px Poppins';
+    scratchCtx.textAlign = 'center';
+    scratchCtx.fillText('¡RASCA AQUÍ! 💖', scratchCanvas.width / 2, scratchCanvas.height / 2 + 5);
 
+    scratchCanvas.onmousedown = (e) => { isScratching = true; scratch(e); };
+    scratchCanvas.onmousemove = (e) => { scratch(e); };
+    window.onmouseup = () => { if(isScratching) { isScratching = false; calculateScratchPercentage(); } };
+
+    scratchCanvas.addEventListener('touchstart', (e) => { isScratching = true; scratch(e.touches[0]); });
+    scratchCanvas.addEventListener('touchmove', (e) => { scratch(e.touches[0]); e.preventDefault(); }, { passive: false });
+    window.addEventListener('touchend', () => { if(isScratching) { isScratching = false; calculateScratchPercentage(); } });
+}
+
+function scratch(e) {
+    if (!isScratching) return;
+    const rect = scratchCanvas.getBoundingClientRect();
+    const x = (e.clientX - rect.left) * (scratchCanvas.width / rect.width);
+    const y = (e.clientY - rect.top) * (scratchCanvas.height / rect.height);
+
+    scratchCtx.globalCompositeOperation = 'destination-out';
+    scratchCtx.beginPath();
+    scratchCtx.arc(x, y, 22, 0, Math.PI * 2);
+    scratchCtx.fill();
+}
+
+function calculateScratchPercentage() {
+    const imgData = scratchCtx.getImageData(0, 0, scratchCanvas.width, scratchCanvas.height);
+    const pixels = imgData.data;
+    let transparentCount = 0;
+    
+    for (let i = 3; i < pixels.length; i += 40) {
+        if (pixels[i] === 0) transparentCount++;
+    }
+    
+    const totalSamples = pixels.length / 40;
+    const percentScratched = (transparentCount / totalSamples) * 100;
+
+    if (percentScratched > 55) {
+        playSystemSound('correct');
+        scratchCanvas.style.transition = "opacity 0.4s ease";
+        scratchCanvas.style.opacity = 0;
+        scratchCanvas.style.pointerEvents = "none";
+        document.getElementById("scratchBtn").classList.remove("hidden");
+    }
+}
+
+function completeScratchCard() {
+    maxLives = 2; 
+    lives = 2;    
+    renderLives(); 
+
+    streak++; 
+    updateProgress();
+    scratchScreen.classList.add("hidden");
+    gameScreen.classList.remove("hidden");
+    loadQuestion();
+}
+
+function setupMusicGameScreen() {
     musicGameScreen.classList.remove("hidden");
-
     songPlayer.currentTime = 0;
 
     const songs = [
-
-        {text:"Mendiara - ROMII",correct:false},
-        {text:"Disobey - ENVIDIA",correct:true},
-        {text:"Kndel El Clandestino",correct:false},
-        {text:"Paño nuevo",correct:false}
-
+        { text: "Mendiara - ROMII", correct: false },
+        { text: "Disobey - ENVIDIA", correct: true },
+        { text: "Kndel El Clandestino", correct: false },
+        { text: "Diweiik - PAÑO NUEVO", correct: false }
     ];
-
-    songs.sort(()=>Math.random()-0.5);
+    songs.sort(() => Math.random() - 0.5);
 
     const buttons = [
         document.getElementById("musBtn1"),
@@ -1022,230 +930,145 @@ function setupMusicGameScreen(){
         document.getElementById("musBtn4")
     ];
 
-    buttons.forEach((btn,i)=>{
-
+    buttons.forEach((btn, i) => {
         btn.textContent = songs[i].text;
-
-        btn.onclick = ()=>checkMusicGame(
-            songs[i].correct,
-            btn
-        );
-
+        btn.classList.remove('answer-correct');
+        btn.onclick = () => checkMusicGame(songs[i].correct, btn);
     });
 }
 
-function checkMusicGame(correct,button){
-
+function checkMusicGame(correct, buttonElement){
     songPlayer.pause();
     songPlayer.currentTime = 0;
-
     if(correct){
-
-        triggerAciertoEffect(button);
-
-        setTimeout(()=>{
-
+        triggerAciertoEffect(buttonElement, musicGameScreen);
+        streak++; 
+        startProceduralMusic(); 
+        setTimeout(() => {
             musicGameScreen.classList.add("hidden");
-
             gameScreen.classList.remove("hidden");
-
             loadQuestion();
-
-        },500);
-
+        }, 500);
     }else{
-
         lives--;
-
+        streak = 0; 
         renderLives();
-
         triggerShake(musicGameScreen);
-
         if(lives <= 0){
-
-            setTimeout(()=>{
-
-                musicGameScreen.classList.add("hidden");
-
-                loseGame();
-
-            },500);
+            setTimeout(() => { musicGameScreen.classList.add("hidden"); loseGame(); }, 500);
         }
     }
 }
 
-function setupFinalMemoryScreen(){
-
+function setupFinalMemoryScreen() {
     finalMemoryGameScreen.classList.remove("hidden");
-
     renderLives();
-
     memoryGridContainer.innerHTML = "";
 
     const memories = [
-
-        {
-            src:"img/recuerdo1.jpg",
-            correct:true
-        },
-
-        {
-            src:"img/recuerdo2.jpg",
-            correct:false
-        },
-
-        {
-            src:"img/recuerdo3.jpg",
-            correct:false
-        },
-
-        {
-            src:"img/recuerdo4.jpg",
-            correct:false
-        }
-
+        { src: "img/recuerdo1.jpg", correct: true, alt: "Recuerdo 1" },
+        { src: "img/recuerdo2.jpg", correct: false, alt: "Recuerdo 2" },
+        { src: "img/recuerdo3.jpg", correct: false, alt: "Recuerdo 3" },
+        { src: "img/recuerdo4.jpg", correct: false, alt: "Recuerdo 4" },
+        { src: "img/recuerdo5.jpg", correct: false, alt: "Recuerdo 5" },
+        { src: "img/recuerdo6.jpg", correct: false, alt: "Recuerdo 6" },
+        { src: "img/recuerdo7.jpg", correct: false, alt: "Recuerdo 7" }
     ];
+    memories.sort(() => Math.random() - 0.5);
 
-    memories.sort(()=>Math.random()-0.5);
-
-    memories.forEach(mem=>{
-
+    memories.forEach(mem => {
         const btn = document.createElement("button");
-
         btn.className = "memory-btn";
-
-        btn.onclick = ()=>checkFinalMemory(
-            mem.correct,
-            btn
-        );
-
+        btn.onclick = () => checkFinalMemory(mem.correct, btn);
+        
         const img = document.createElement("img");
-
         img.src = mem.src;
-
+        img.alt = mem.alt;
+        
         btn.appendChild(img);
-
         memoryGridContainer.appendChild(btn);
-
     });
 }
 
-function checkFinalMemory(correct,button){
-
+function checkFinalMemory(correct, buttonElement){
     if(correct){
-
-        triggerAciertoEffect(button);
-
-        setTimeout(()=>{
-
-            finalMemoryGameScreen.classList.add("hidden");
-
-            winGame();
-
-        },500);
-
+        playSystemSound('correct');
+        buttonElement.classList.add('answer-correct');
+        setTimeout(() => { finalMemoryGameScreen.classList.add("hidden"); winGame(); }, 500);
     }else{
-
         lives--;
-
+        streak = 0; 
         renderLives();
-
         triggerShake(finalMemoryGameScreen);
-
-        button.classList.add("memory-incorrect");
-
+        buttonElement.classList.add("memory-incorrect");
         if(lives <= 0){
-
-            setTimeout(()=>{
-
-                finalMemoryGameScreen.classList.add("hidden");
-
-                loseGame();
-
-            },500);
+            setTimeout(() => { finalMemoryGameScreen.classList.add("hidden"); loseGame(); }, 500);
         }
     }
 }
 
-function launchConfetti(){
-
-    const duration = 2000;
-
-    const end = Date.now() + duration;
-
-    (function frame(){
-
-        confetti({
-            particleCount:3,
-            angle:60,
-            spread:55,
-            origin:{x:0,y:.8}
-        });
-
-        confetti({
-            particleCount:3,
-            angle:120,
-            spread:55,
-            origin:{x:1,y:.8}
-        });
-
-        if(Date.now() < end){
-            requestAnimationFrame(frame);
-        }
-
-    })();
+function launchConfetti() {
+    var duration = 2 * 1000;
+    var end = Date.now() + duration;
+    (function frame() {
+        confetti({ particleCount: 3, angle: 60, spread: 55, origin: { x: 0, y: 0.8 } });
+        confetti({ particleCount: 3, angle: 120, spread: 55, origin: { x: 1, y: 0.8 } });
+        if (Date.now() < end) { requestAnimationFrame(frame); }
+    }());
 }
 
 function winGame(){
-
     stopProceduralMusic();
-
     winScreen.classList.remove("hidden");
-
     launchConfetti();
 }
 
 function showRewardScreen(){
-
     winScreen.classList.add("hidden");
-
     rewardScreen.classList.remove("hidden");
-
     confetti({
-        particleCount:250,
-        spread:120,
-        origin:{y:.6}
+        particleCount: 250,
+        spread: 120,
+        origin:{ y:0.6 }
     });
 }
 
 function loseGame(){
-
-    stopProceduralMusic();
-
+    stopProceduralMusic(); 
+    songPlayer.pause();
+    songPlayer.currentTime = 0;
     loseScreen.classList.remove("hidden");
 }
 
 function restartGame(){
-
     stopProceduralMusic();
-
+    songPlayer.pause();
+    songPlayer.currentTime = 0;
+    
+    // Parar y reiniciar la música de fondo al volver al inicio
+    bgMusic.pause();
+    bgMusic.currentTime = 0;
+    
     currentQuestion = 0;
     lives = 1;
     maxLives = 1;
     streak = 0;
-
+    
     loseScreen.classList.add("hidden");
-    rewardScreen.classList.add("hidden");
     winScreen.classList.add("hidden");
+    rewardScreen.classList.add("hidden");
     finalMemoryGameScreen.classList.add("hidden");
-    miniGameScreen.classList.add("hidden");
-    musicGameScreen.classList.add("hidden");
     gameScreen.classList.add("hidden");
-
+    miniGameScreen.classList.add("hidden");
+    scratchScreen.classList.add("hidden");
+    musicGameScreen.classList.add("hidden");
     startScreen.classList.remove("hidden");
 }
-
 </script>
 
+<div class="floating-hearts">
+    <span>❤️</span><span>💖</span><span>💕</span><span>❤️</span><span>💗</span>
+</div>
 </body>
 </html>
+
